@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { aiService } from '../services/aiService';
+import { audioService } from '../services/audioService';
 
 const DialectDecoder: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [input, setInput] = useState('');
@@ -13,6 +14,12 @@ const DialectDecoder: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const result = await aiService.translateToPalembang(input);
     setOutput(result);
     setIsDecoding(false);
+  };
+
+  const handleSpeak = () => {
+    if (output) {
+      audioService.speak(output, 'Zephyr');
+    }
   };
 
   return (
@@ -49,11 +56,17 @@ const DialectDecoder: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </button>
 
           {output && (
-            <div className="mt-8 p-8 bg-yellow-50 rounded-[2.5rem] border-4 border-dashed border-yellow-200 relative fade-in">
+            <div className="mt-8 p-8 bg-yellow-50 rounded-[2.5rem] border-4 border-dashed border-yellow-200 relative fade-in flex flex-col items-center">
               <span className="absolute -top-4 left-6 bg-yellow-400 text-white px-4 py-1 rounded-full text-xs font-black uppercase">Result</span>
-              <p className="text-2xl font-black text-orange-900 text-center leading-relaxed">
+              <p className="text-2xl font-black text-orange-900 text-center leading-relaxed mb-4">
                 "{output}"
               </p>
+              <button 
+                onClick={handleSpeak}
+                className="flex items-center gap-2 bg-orange-100 text-orange-600 px-6 py-3 rounded-full font-black hover:bg-orange-200 transition-colors shadow-sm"
+              >
+                <span>🔊</span> Listen to Zephyr
+              </button>
             </div>
           )}
         </div>

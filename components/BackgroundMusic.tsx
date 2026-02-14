@@ -8,7 +8,7 @@ const BackgroundMusic: React.FC = () => {
 
   useEffect(() => {
     // Using a whimsical, upbeat royalty-free track suitable for kids' media
-    audioRef.current = new Audio('https://loose-gray-hjywktze9m.edgeone.app/gending-sriwijaya.mp3');
+    audioRef.current = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
     audioRef.current.loop = true;
     audioRef.current.volume = volume;
 

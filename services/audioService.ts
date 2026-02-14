@@ -74,6 +74,19 @@ export class AudioService {
       console.error("TTS Error:", error);
     }
   }
+
+  playEffect(type: 'pop' | 'whoosh' | 'success') {
+    const urls = {
+      pop: 'https://www.soundjay.com/buttons/sounds/button-16.mp3',
+      whoosh: 'https://www.soundjay.com/buttons/sounds/button-17.mp3',
+      success: 'https://www.soundjay.com/buttons/sounds/button-3.mp3'
+    };
+    const audio = new Audio(urls[type]);
+    audio.volume = 0.3;
+    audio.play().catch(() => {
+      // Browsers often block audio until user interaction
+    });
+  }
 }
 
 export const audioService = new AudioService();

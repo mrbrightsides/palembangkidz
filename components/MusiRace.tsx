@@ -29,17 +29,20 @@ const MusiRace: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const handlePaddle = () => {
     if (isFinished) return;
-    if (navigator.vibrate) navigator.vibrate(20);
     
     const now = Date.now();
     const diff = now - lastTapRef.current;
     
     if (diff < 600 && diff > 300) {
+      // SUCCESSFUL RHYTHMIC TAP
+      if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
       setCombo(c => c + 1);
       setSpeed(s => Math.min(20, s + 3 + (combo * 0.2)));
       setShowTap(true);
       setTimeout(() => setShowTap(false), 200);
     } else {
+      // STANDARD TAP
+      if (navigator.vibrate) navigator.vibrate(20);
       setCombo(0);
       setSpeed(s => Math.min(20, s + 2));
     }
@@ -88,7 +91,7 @@ const MusiRace: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <div className="clay-card bg-white p-6 w-40 relative">
             <p className="text-sky-400 font-black text-sm uppercase">Combo</p>
             <p className="text-3xl font-black text-sky-900">x{combo}</p>
-            {showTap && <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-4xl animate-bounce">✨ PERFECT!</div>}
+            {showTap && <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-4xl animate-bounce text-white font-black drop-shadow-lg">✨ PERFECT!</div>}
           </div>
         </div>
 

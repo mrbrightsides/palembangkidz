@@ -6,7 +6,9 @@ import LottiePlayer from './LottiePlayer';
 const ClayifyStudio: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [prompt, setPrompt] = useState('');
   const [isBaking, setIsBaking] = useState(false);
+  const [isBakingBg, setIsBakingBg] = useState(false);
   const [resultImage, setResultImage] = useState<string | null>(null);
+  const [bgImage, setBgImage] = useState<string | null>(null);
 
   const handleBake = async () => {
     if (!prompt.trim()) return;
@@ -14,6 +16,15 @@ const ClayifyStudio: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const img = await aiService.generateClayImage(prompt);
     setResultImage(img);
     setIsBaking(false);
+  };
+
+  const handleBakeBackground = async () => {
+    if (!prompt.trim()) return;
+    setIsBakingBg(true);
+    const bgPrompt = `A beautiful 3D claymation background scene of ${prompt}, wide shot, soft depth of field, vibrant colors, stop-motion style.`;
+    const img = await aiService.generateClayImage(bgPrompt);
+    setBgImage(img);
+    setIsBakingBg(false);
   };
 
   return (
@@ -28,7 +39,7 @@ const ClayifyStudio: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <p className="text-indigo-500 font-bold mt-2">Bake your ideas into real clay masterpieces!</p>
         </div>
 
-        {!resultImage ? (
+        {!resultImage && !bgImage ? (
           <div className="space-y-8">
             <div className="relative">
               <textarea
@@ -42,48 +53,93 @@ const ClayifyStudio: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               </div>
             </div>
 
-            <button
-              onClick={handleBake}
-              disabled={isBaking || !prompt.trim()}
-              className={`w-full py-6 rounded-[2.5rem] font-black text-2xl shadow-lg transform transition-all active:scale-95 flex items-center justify-center gap-4 ${
-                isBaking ? 'bg-indigo-100 text-indigo-300' : 'bg-indigo-600 text-white hover:bg-indigo-700'
-              }`}
-            >
-              {isBaking ? (
-                <>
-                  <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
-                  Baking in the Kiln...
-                </>
-              ) : (
-                <>🔥 Bake My Idea!</>
-              )}
-            </button>
+            <div className="flex flex-col gap-4">
+              <button
+                onClick={handleBake}
+                disabled={isBaking || !prompt.trim()}
+                className={`w-full py-6 rounded-[2.5rem] font-black text-2xl shadow-lg transform transition-all active:scale-95 flex items-center justify-center gap-4 ${
+                  isBaking ? 'bg-indigo-100 text-indigo-300' : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                }`}
+              >
+                {isBaking ? (
+                  <>
+                    <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+                    Baking Object...
+                  </>
+                ) : (
+                  <>🔥 Bake Main Object!</>
+                )}
+              </button>
+              
+              <button
+                onClick={handleBakeBackground}
+                disabled={isBakingBg || !prompt.trim()}
+                className={`w-full py-4 rounded-[2rem] font-black text-xl shadow-md border-4 border-indigo-100 transform transition-all active:scale-95 flex items-center justify-center gap-4 ${
+                  isBakingBg ? 'bg-indigo-50 text-indigo-200' : 'bg-white text-indigo-600 hover:bg-indigo-50'
+                }`}
+              >
+                {isBakingBg ? 'Baking Background...' : '🖼️ Bake Background Scene'}
+              </button>
+            </div>
           </div>
         ) : (
           <div className="space-y-6 fade-in text-center">
-            <div className="relative group">
-              <img src={resultImage} alt="Clay Result" className="w-full aspect-square rounded-[3rem] border-8 border-indigo-50 shadow-2xl object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-[3rem] pointer-events-none" />
+            <div className="relative group aspect-square rounded-[3rem] border-8 border-indigo-50 shadow-2xl overflow-hidden bg-indigo-50">
+              {bgImage && (
+                <img src={bgImage} alt="Clay Background" className="absolute inset-0 w-full h-full object-cover blur-sm opacity-60" />
+              )}
+              {resultImage && (
+                <img src={resultImage} alt="Clay Object" className="relative z-10 w-full h-full object-contain scale-90" />
+              )}
+              
+              {!resultImage && bgImage && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                   <p className="text-indigo-400 font-black">Background ready! Now bake an object.</p>
+                </div>
+              )}
             </div>
             
-            <div className="flex gap-4">
-              <button onClick={() => setResultImage(null)} className="flex-1 py-4 bg-indigo-100 text-indigo-600 rounded-full font-black text-lg hover:bg-indigo-200 transition">Bake Another!</button>
-              <button 
-                onClick={() => {
-                   const link = document.createElement('a');
-                   link.href = resultImage;
-                   link.download = 'my-clay-creation.png';
-                   link.click();
-                }}
-                className="flex-1 py-4 bg-emerald-500 text-white rounded-full font-black text-lg hover:bg-emerald-600 transition shadow-lg"
-              >
-                💾 Save to Gallery
-              </button>
+            <div className="flex flex-wrap gap-4">
+              <button onClick={() => { setResultImage(null); setBgImage(null); }} className="flex-1 min-w-[140px] py-4 bg-indigo-100 text-indigo-600 rounded-full font-black text-lg hover:bg-indigo-200 transition">Bake Another!</button>
+              
+              {!resultImage && bgImage && (
+                <button onClick={handleBake} className="flex-1 min-w-[140px] py-4 bg-indigo-600 text-white rounded-full font-black text-lg hover:bg-indigo-700 transition">Add Object ✨</button>
+              )}
+              
+              {(resultImage || bgImage) && (
+                <button 
+                  onClick={() => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 1024;
+                    canvas.height = 1024;
+                    const ctx = canvas.getContext('2d');
+                    if (ctx) {
+                      const draw = (src: string) => new Promise(resolve => {
+                        const img = new Image();
+                        img.onload = () => { ctx.drawImage(img, 0, 0, 1024, 1024); resolve(true); };
+                        img.src = src;
+                      });
+                      
+                      (async () => {
+                        if (bgImage) await draw(bgImage);
+                        if (resultImage) await draw(resultImage);
+                        const link = document.createElement('a');
+                        link.href = canvas.toDataURL();
+                        link.download = 'my-clay-creation.png';
+                        link.click();
+                      })();
+                    }
+                  }}
+                  className="flex-1 min-w-[140px] py-4 bg-emerald-500 text-white rounded-full font-black text-lg hover:bg-emerald-600 transition shadow-lg"
+                >
+                  💾 Save Masterpiece
+                </button>
+              )}
             </div>
           </div>
         )}
 
-        {isBaking && (
+        {(isBaking || isBakingBg) && (
           <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm">
              <div className="w-64 h-64">
                <LottiePlayer url="https://lottie.host/9e4d5884-6997-4007-96a1-633005a76953/6pW6O5ZOnA.json" className="w-full h-full" />

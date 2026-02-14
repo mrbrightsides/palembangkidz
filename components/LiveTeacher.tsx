@@ -27,6 +27,7 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [isActive, setIsActive] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [transcription, setTranscription] = useState<string[]>([]);
+  const [latestZephyrMsg, setLatestZephyrMsg] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const sessionRef = useRef<any>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -42,7 +43,6 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const startSession = async () => {
     setIsConnecting(true);
     try {
-      // Use process.env.API_KEY directly for initialization
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
@@ -68,7 +68,6 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               const input = e.inputBuffer.getChannelData(0);
               const int16 = new Int16Array(input.length);
               for (let i = 0; i < input.length; i++) int16[i] = input[i] * 32768;
-              // Use manual encode function to avoid stack overflow with large arrays
               const base64 = encode(new Uint8Array(int16.buffer));
               sessionPromise.then(s => s.sendRealtimeInput({ media: { data: base64, mimeType: 'audio/pcm;rate=16000' } }));
             };
@@ -86,7 +85,6 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               const channelData = buffer.getChannelData(0);
               for (let i = 0; i < int16.length; i++) channelData[i] = int16[i] / 32768.0;
 
-              // Schedule gapless playback
               nextStartTimeRef.current = Math.max(nextStartTimeRef.current, ctx.currentTime);
               const source = ctx.createBufferSource();
               source.buffer = buffer;
@@ -96,7 +94,9 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               sourcesRef.current.add(source);
             }
             if (msg.serverContent?.outputTranscription) {
-              setTranscription(prev => [...prev, `Zephyr: ${msg.serverContent!.outputTranscription!.text}`]);
+              const text = msg.serverContent.outputTranscription.text;
+              setTranscription(prev => [...prev, `Zephyr: ${text}`]);
+              setLatestZephyrMsg(text);
             }
             if (msg.serverContent?.inputTranscription) {
               setTranscription(prev => [...prev, `You: ${msg.serverContent!.inputTranscription!.text}`]);
@@ -116,20 +116,31 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const stopSession = () => {
     sessionRef.current?.close();
     setIsActive(false);
+    setLatestZephyrMsg(null);
   };
 
   return (
     <div className="fixed inset-0 z-[250] bg-sky-950 flex flex-col items-center justify-center p-6 backdrop-blur-3xl">
       <div className="max-w-4xl w-full h-full flex flex-col gap-8">
         <div className="flex justify-between items-center text-white">
-          <div className="flex items-center gap-4">
-            <img src={VOICE_AVATARS.Zephyr.img} className="w-16 h-16 rounded-full border-4 border-sky-400" />
+          <div className="flex items-center gap-4 relative">
+            <div className="relative">
+              <img src={VOICE_AVATARS.Zephyr.img} className="w-16 h-16 rounded-full border-4 border-sky-400 relative z-10" />
+              {latestZephyrMsg && (
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-64 bg-white p-4 rounded-3xl shadow-2xl border-4 border-sky-100 animate-clay-jerky z-20">
+                  <p className="text-sky-900 font-black text-sm leading-tight italic">
+                    {latestZephyrMsg}
+                  </p>
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-r-4 border-b-4 border-sky-100 -mt-2" />
+                </div>
+              )}
+            </div>
             <div>
               <h2 className="text-3xl font-black">Live with Zephyr</h2>
               <p className="text-sky-300 font-bold">{isActive ? '🟢 Connected' : '🔴 Ready to talk'}</p>
             </div>
           </div>
-          <button onClick={() => { stopSession(); onClose(); }} className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-white font-black hover:bg-red-500">✕</button>
+          <button onClick={() => { stopSession(); onClose(); }} className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-white font-black hover:bg-red-500 transition-colors">✕</button>
         </div>
 
         <div ref={scrollRef} className="flex-1 bg-black/40 rounded-[3rem] p-8 overflow-y-auto space-y-4 border-4 border-white/5 scroll-smooth shadow-inner">
@@ -145,7 +156,7 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             </div>
           )}
           {transcription.map((line, i) => (
-            <div key={i} className={`p-4 rounded-3xl max-w-[80%] font-bold text-lg ${line.startsWith('Zephyr') ? 'bg-sky-600 text-white self-start' : 'bg-white/10 text-sky-100 self-end ml-auto'}`}>
+            <div key={i} className={`p-4 rounded-3xl max-w-[80%] font-bold text-lg fade-in ${line.startsWith('Zephyr') ? 'bg-sky-600 text-white self-start' : 'bg-white/10 text-sky-100 self-end ml-auto'}`}>
               {line}
             </div>
           ))}

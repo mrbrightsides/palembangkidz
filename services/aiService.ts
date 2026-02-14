@@ -3,7 +3,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Language, AiHeritageInsight } from "../types";
 
 export class AIService {
-  // Removed static member to ensure fresh initialization as per guidelines
+  // Fresh initialization as per guidelines
 
   async getKidFriendlyExplanation(itemName: string, lang: Language): Promise<AiHeritageInsight> {
     const prompt = `
@@ -20,8 +20,7 @@ export class AIService {
     `;
 
     try {
-      // Create a new GoogleGenAI instance right before making an API call
-      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt,
@@ -51,11 +50,32 @@ export class AIService {
     }
   }
 
+  async getSimplifiedSummary(description: string, lang: Language): Promise<string> {
+    const prompt = `
+      Simplify this description for a 5-year-old child in ONE very short and super-fun sentence.
+      Make it sound like a exciting discovery!
+      Description: "${description}"
+      Language: ${lang}.
+      Just return the simplified sentence, no extra text.
+    `;
+
+    try {
+      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+      const response = await ai.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: prompt
+      });
+      return response.text?.trim() || description;
+    } catch (error) {
+      console.error("Simplification Error:", error);
+      return description;
+    }
+  }
+
   async generateClayImage(description: string): Promise<string | null> {
     const prompt = `A 3D claymation style creation of: ${description}. Soft clay textures, whimsical, friendly, vibrant colors, studio lighting, high detail, masterpiece, centered on a plain white pedestal background.`;
     
     try {
-      // Always use the official model and initialization pattern
       const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-image',

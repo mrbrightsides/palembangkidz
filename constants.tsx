@@ -22,6 +22,7 @@ export const VOICE_AVATARS = {
 export const CULTURE_DATA: CultureItem[] = [
   {
     id: 'ampera',
+    difficulty: 'Easy',
     title: { id: 'Jembatan Ampera', en: 'Ampera Bridge', plm: 'Jembatan Ampera' },
     pronunciation: { id: 'Am-pe-ra', en: 'Am-peh-rah', plm: 'Am-pe-rah' },
     description: {
@@ -46,6 +47,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'bkb',
+    difficulty: 'Medium',
     title: { id: 'Benteng Kuto Besak', en: 'Kuto Besak Fort', plm: 'Benteng Kuto Besak' },
     pronunciation: { id: 'Ben-teng Ku-to Be-sak', en: 'Ben-teng Koo-toh Beh-sack', plm: 'Ben-teng Ku-to Be-sak' },
     description: { id: 'Benteng pertahanan bersejarah di tepi Sungai Musi.', en: 'Historic fort on the banks of Musi River.', plm: 'Benteng kito deket sungai Musi, tempat nongkrong seru.' },
@@ -66,6 +68,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'pulau-kemaro',
+    difficulty: 'Hard',
     title: { id: 'Pulau Kemaro', en: 'Kemaro Island', plm: 'Pulo Kemaro' },
     pronunciation: { id: 'Pu-lau Ke-ma-ro', en: 'Poo-lau Keh-mah-roh', plm: 'Pu-lo Ke-ma-ro' },
     description: {
@@ -94,6 +97,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'pempek',
+    difficulty: 'Easy',
     title: { id: 'Pempek', en: 'Pempek', plm: 'Pempek' },
     pronunciation: { id: 'Pem-pek', en: 'Pem-peck', plm: 'Pem-pek' },
     description: {
@@ -122,6 +126,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'sriwijaya',
+    difficulty: 'Hard',
     title: { id: 'Kerajaan Sriwijaya', en: 'Srivijaya Kingdom', plm: 'Kerajaan Sriwijaya' },
     pronunciation: { id: 'Sri-wi-ja-ya', en: 'Sree-wee-jah-yah', plm: 'Sri-wi-ja-yo' },
     description: { id: 'Kerajaan maritim terbesar di Asia Tenggara.', en: 'Largest maritime empire in Southeast Asia.', plm: 'Kerajaan paling hebat jaman dulu.' },
@@ -142,6 +147,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'quran-akbar',
+    difficulty: 'Medium',
     title: { id: 'Al-Quran Al-Akbar', en: 'Giant Quran', plm: 'Al-Quran Al-Akbar' },
     pronunciation: { id: 'Al-Qur-an Al-Ak-bar', en: 'Ahl-Qoor-ahn Ahl Ack-bar', plm: 'Al-Qur-an Al-Ak-bar' },
     description: { id: 'Al-Quran raksasa yang diukir indah pada kayu.', en: 'Giant Quran beautifully carved on wood.', plm: 'Al-Quran besak nian diukir di kayu.' },
@@ -162,6 +168,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'history-stories',
+    difficulty: 'Easy',
     title: { id: 'Cerita Sejarah', en: 'History Stories', plm: 'Cerito Lamo' },
     pronunciation: { id: 'Se-ja-rah', en: 'Seh-jah-rah', plm: 'Se-ja-rah' },
     description: {
@@ -190,6 +197,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'rumah-limas',
+    difficulty: 'Medium',
     title: { id: 'Rumah Limas', en: 'Limas House', plm: 'Rumah Limas' },
     pronunciation: { id: 'Li-mas', en: 'Lee-mas', plm: 'Li-mas' },
     description: {
@@ -218,6 +226,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'songket',
+    difficulty: 'Hard',
     title: { id: 'Kain Songket', en: 'Songket Fabric', plm: 'Songket' },
     pronunciation: { id: 'Song-ket', en: 'Song-ket', plm: 'Song-ket' },
     description: {
@@ -246,6 +255,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'tari-tanggai',
+    difficulty: 'Medium',
     title: { id: 'Tari Tanggai', en: 'Tanggai Dance', plm: 'Tari Tanggai' },
     pronunciation: { id: 'Tang-gai', en: 'Tang-guy', plm: 'Tang-gai' },
     description: {
@@ -274,6 +284,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'ikan-belido',
+    difficulty: 'Easy',
     title: { id: 'Ikan Belido', en: 'Belido Fish', plm: 'Iwak Belido' },
     pronunciation: { id: 'Be-li-do', en: 'Be-lee-doh', plm: 'Be-li-do' },
     description: {
@@ -302,6 +313,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'mie-celor',
+    difficulty: 'Easy',
     title: { id: 'Mie Celor', en: 'Mie Celor', plm: 'Mie Celor' },
     pronunciation: { id: 'Mie Ce-lor', en: 'Mee Che-lor', plm: 'Mie Ce-lor' },
     description: {
@@ -330,6 +342,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'masjid-agung',
+    difficulty: 'Medium',
     title: { id: 'Masjid Agung Palembang', en: 'Great Mosque of Palembang', plm: 'Masjid Agung' },
     pronunciation: { id: 'Ah-gung', en: 'Ah-goong', plm: 'Ah-gung' },
     description: {
@@ -358,6 +371,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'perahu-bidar',
+    difficulty: 'Hard',
     title: { id: 'Perahu Bidar', en: 'Bidar Boat', plm: 'Perahu Bidar' },
     pronunciation: { id: 'Bi-dar', en: 'Bee-dar', plm: 'Bi-dar' },
     description: {
@@ -386,6 +400,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'kemplang',
+    difficulty: 'Easy',
     title: { id: 'Kemplang', en: 'Kemplang Crackers', plm: 'Kemplang' },
     pronunciation: { id: 'Kem-plang', en: 'Kem-plahng', plm: 'Kem-plang' },
     description: {
@@ -394,7 +409,7 @@ export const CULTURE_DATA: CultureItem[] = [
       plm: 'Kerupuk iwak kito yang gurih nian, biasonyo dipanggang atau digoreng.'
     },
     funFact: {
-      id: 'Kemplang Tunu dimasak dengan cara dipanggang di atas bara api, bukan digoreng!',
+      id: 'Kemplang Tunu dimasak with cara dipanggang di atas bara api, bukan digoreng!',
       en: 'Kemplang Tunu is cooked by grilling over hot coals, not deep-fried!',
       plm: 'Kemplang Tunu tu dipanggang di pucuk baro api, mangkonyo rasonyo beda.'
     },
@@ -414,6 +429,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'martabak-har',
+    difficulty: 'Medium',
     title: { id: 'Martabak HAR', en: 'HAR Martabak', plm: 'Martabak HAR' },
     pronunciation: { id: 'Har', en: 'Hah-er', plm: 'Har' },
     description: {
@@ -442,6 +458,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'kampung-arab',
+    difficulty: 'Medium',
     title: { id: 'Kampung Arab Al-Munawar', en: 'Al-Munawar Arabic Village', plm: 'Kampung Arab' },
     pronunciation: { id: 'Al Mu-na-war', en: 'Ahl Moo-nah-wahr', plm: 'Al Mu-na-war' },
     description: {
@@ -470,6 +487,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'pindang-patin',
+    difficulty: 'Hard',
     title: { id: 'Pindang Patin', en: 'Pindang Patin', plm: 'Pindang Patin' },
     pronunciation: { id: 'Pa-tin', en: 'Pah-teen', plm: 'Pa-tin' },
     description: {
@@ -498,6 +516,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'batik-palembang',
+    difficulty: 'Medium',
     title: { id: 'Batik Palembang', en: 'Palembang Batik', plm: 'Batik Palembang' },
     pronunciation: { id: 'Ba-tik', en: 'Bah-teek', plm: 'Ba-tek' },
     description: {
@@ -526,6 +545,7 @@ export const CULTURE_DATA: CultureItem[] = [
   },
   {
     id: 'laksan',
+    difficulty: 'Easy',
     title: { id: 'Laksan', en: 'Laksan', plm: 'Laksan' },
     pronunciation: { id: 'Lak-san', en: 'Luck-sahn', plm: 'Lak-san' },
     description: {

@@ -38,12 +38,8 @@ const Scrapbook: React.FC<Props> = ({
     onUpdateStickers(stickers.filter(s => s.id !== id));
   };
 
-  const updateStickerPos = (id: string, dx: number, dy: number) => {
-    onUpdateStickers(stickers.map(s => s.id === id ? {
-      ...s,
-      posX: Math.max(5, Math.min(95, s.posX + dx)),
-      posY: Math.max(5, Math.min(95, s.posY + dy))
-    } : s));
+  const updateStickerProperty = (id: string, updates: Partial<ScrapbookSticker>) => {
+    onUpdateStickers(stickers.map(s => s.id === id ? { ...s, ...updates } : s));
   };
 
   return (
@@ -52,7 +48,7 @@ const Scrapbook: React.FC<Props> = ({
         <button onClick={onClose} className="absolute top-6 right-6 z-50 w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center font-black text-orange-400 hover:bg-red-500 hover:text-white transition-all">✕</button>
 
         {/* Sticker Bin (Left Sidebar) */}
-        <div className="w-full md:w-80 bg-orange-50/50 p-8 border-r-4 border-dashed border-orange-100 overflow-y-auto">
+        <div className="w-full md:w-80 bg-orange-50/50 p-8 border-r-4 border-dashed border-orange-100 overflow-y-auto shrink-0">
           <h3 className="text-2xl font-black text-orange-900 mb-6 flex items-center gap-2">
             <span>✨</span> Sticker Bin
           </h3>
@@ -79,7 +75,6 @@ const Scrapbook: React.FC<Props> = ({
                           <span className="text-[10px]">⭐</span>
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </>
                   ) : (
                     <span className="flex items-center justify-center h-full text-2xl">🔒</span>
@@ -88,14 +83,36 @@ const Scrapbook: React.FC<Props> = ({
               );
             })}
           </div>
-          <p className="mt-6 text-xs font-bold text-orange-400 text-center italic">
-            "Visit places on the map to unlock more stickers!"
-          </p>
+          
+          {activeStickerId && (
+            <div className="mt-8 p-4 bg-white rounded-2xl border-2 border-orange-100 shadow-sm fade-in">
+              <h4 className="text-xs font-black text-orange-900 uppercase mb-4 tracking-widest">Modify Sticker</h4>
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-orange-300">Rotation</label>
+                  <input 
+                    type="range" min="-180" max="180" 
+                    value={stickers.find(s => s.id === activeStickerId)?.rotation || 0}
+                    onChange={(e) => updateStickerProperty(activeStickerId, { rotation: parseInt(e.target.value) })}
+                    className="w-full h-2 bg-orange-50 rounded-full appearance-none accent-orange-500"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-orange-300">Scale</label>
+                  <input 
+                    type="range" min="0.5" max="2" step="0.1"
+                    value={stickers.find(s => s.id === activeStickerId)?.scale || 1}
+                    onChange={(e) => updateStickerProperty(activeStickerId, { scale: parseFloat(e.target.value) })}
+                    className="w-full h-2 bg-orange-50 rounded-full appearance-none accent-orange-500"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Scrapbook Canvas */}
         <div className="flex-1 bg-[#fdfcf0] relative overflow-hidden group/canvas p-10 cursor-crosshair">
-          {/* Paper Texture Overlay */}
           <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]" />
           
           <div className="absolute top-10 left-10 z-10">
@@ -112,7 +129,6 @@ const Scrapbook: React.FC<Props> = ({
             </div>
           )}
 
-          {/* Stickers on Canvas */}
           {stickers.map((sticker) => {
             const item = CULTURE_DATA.find(i => i.id === sticker.itemId)!;
             const isMastered = masteredIds.includes(item.id);
@@ -120,7 +136,7 @@ const Scrapbook: React.FC<Props> = ({
               <div
                 key={sticker.id}
                 className={`absolute cursor-move select-none group/sticker transition-shadow ${
-                  activeStickerId === sticker.id ? 'z-40 ring-4 ring-orange-400 ring-offset-4 rounded-xl shadow-2xl' : 'z-20 hover:z-30'
+                  activeStickerId === sticker.id ? 'z-40 ring-4 ring-orange-400 ring-offset-4 rounded-xl shadow-2xl scale-[1.02]' : 'z-20 hover:z-30'
                 }`}
                 style={{
                   left: `${sticker.posX}%`,
@@ -130,7 +146,6 @@ const Scrapbook: React.FC<Props> = ({
                 onMouseDown={() => setActiveStickerId(sticker.id)}
               >
                 <div className="relative clay-card bg-white p-2 border-b-4 border-gray-200 shadow-lg">
-                   {/* "Tape" decoration */}
                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-6 bg-white/40 backdrop-blur-sm rotate-3 border border-white/50" />
                    
                    <img 
@@ -151,7 +166,6 @@ const Scrapbook: React.FC<Props> = ({
                      </div>
                    )}
 
-                   {/* Delete Button */}
                    <button
                     onClick={(e) => { e.stopPropagation(); removeSticker(sticker.id); }}
                     className="absolute -top-2 -left-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover/sticker:opacity-100 transition-opacity shadow-lg"
@@ -160,7 +174,6 @@ const Scrapbook: React.FC<Props> = ({
                    </button>
                 </div>
 
-                {/* Drag Handles (Simplified for Mouse) */}
                 <div 
                   className="absolute inset-0"
                   onMouseDown={(e) => {
@@ -169,7 +182,10 @@ const Scrapbook: React.FC<Props> = ({
                     const onMouseMove = (moveEvent: MouseEvent) => {
                       const dx = ((moveEvent.clientX - startX) / window.innerWidth) * 100;
                       const dy = ((moveEvent.clientY - startY) / window.innerHeight) * 100;
-                      updateStickerPos(sticker.id, dx, dy);
+                      updateStickerProperty(sticker.id, {
+                        posX: Math.max(5, Math.min(95, sticker.posX + dx)),
+                        posY: Math.max(5, Math.min(95, sticker.posY + dy))
+                      });
                     };
                     const onMouseUp = () => {
                       window.removeEventListener('mousemove', onMouseMove);
@@ -182,13 +198,6 @@ const Scrapbook: React.FC<Props> = ({
               </div>
             );
           })}
-        </div>
-
-        {/* Footer info */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:right-10 bg-white/80 backdrop-blur px-6 py-2 rounded-full border border-orange-100 shadow-sm z-50 pointer-events-none">
-          <p className="text-xs font-black text-orange-900 uppercase tracking-widest">
-            {stickers.length} Stickers Placed • {completedIds.length} / {CULTURE_DATA.length} Unlocked
-          </p>
         </div>
       </div>
     </div>
