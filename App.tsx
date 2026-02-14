@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { CultureItem, Language, AiHeritageInsight } from './types';
+import { CultureItem, Language, AiHeritageInsight, ScrapbookSticker } from './types';
 import { CULTURE_DATA, UI_STRINGS, VOICE_AVATARS } from './constants';
 import CultureCard from './components/CultureCard';
 import QuizModule from './components/QuizModule';
@@ -13,6 +13,7 @@ import LiveTeacher from './components/LiveTeacher';
 import MusiRace from './components/MusiRace';
 import SoundscapeMixer from './components/SoundscapeMixer';
 import DialectDecoder from './components/DialectDecoder';
+import Scrapbook from './components/Scrapbook';
 import { audioService } from './services/audioService';
 import { aiService } from './services/aiService';
 
@@ -54,6 +55,10 @@ const App: React.FC = () => {
     const saved = localStorage.getItem('palembang-kidz-mastery');
     return saved ? JSON.parse(saved) : [];
   });
+  const [stickers, setStickers] = useState<ScrapbookSticker[]>(() => {
+    const saved = localStorage.getItem('palembang-kidz-stickers');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 2000);
@@ -76,6 +81,11 @@ const App: React.FC = () => {
     setCurrentSpeaker(voice);
     audioService.speak(item.voiceoverScript[lang], voice);
     setTimeout(() => setCurrentSpeaker(null), 5000);
+  };
+
+  const handleUpdateStickers = (newStickers: ScrapbookSticker[]) => {
+    setStickers(newStickers);
+    localStorage.setItem('palembang-kidz-stickers', JSON.stringify(newStickers));
   };
 
   const toggleModal = (key: keyof typeof activeModals) => {
@@ -110,6 +120,11 @@ const App: React.FC = () => {
         <button onClick={() => toggleModal('passport')} className="group relative w-16 h-16 bg-white rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-sky-100 transition-all hover:scale-110 active:scale-95">
           <span className="text-3xl">📖</span>
           <span className="absolute left-20 bg-sky-800 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none">My Scrapbook</span>
+          {completedIds.length > 0 && (
+            <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-white animate-bounce">
+              {completedIds.length}
+            </span>
+          )}
         </button>
       </div>
 
@@ -158,19 +173,37 @@ const App: React.FC = () => {
       {activeModals.race && <MusiRace onClose={() => toggleModal('race')} />}
       {activeModals.decoder && <DialectDecoder onClose={() => toggleModal('decoder')} />}
       {activeModals.mixer && <SoundscapeMixer onClose={() => toggleModal('mixer')} />}
+      {activeModals.passport && (
+        <Scrapbook 
+          completedIds={completedIds} 
+          masteredIds={masteredIds} 
+          lang={lang} 
+          stickers={stickers}
+          onUpdateStickers={handleUpdateStickers}
+          onClose={() => toggleModal('passport')} 
+        />
+      )}
 
-      {/* SELECTED ITEM DETAIL (Overlay remains similar) */}
+      {/* SELECTED ITEM DETAIL */}
       {selectedItem && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-sky-900/50 backdrop-blur-md">
           <div className="clay-card bg-white max-w-5xl w-full max-h-[95vh] overflow-y-auto shadow-2xl relative fade-in">
-             {/* Detail view content as before... */}
              <div className="p-8">
-               <button onClick={() => setSelectedItem(null)} className="absolute top-6 right-6 w-12 h-12 bg-sky-50 rounded-full flex items-center justify-center font-black">✕</button>
-               <video src={selectedItem.videoUrl} className="w-full h-[400px] object-cover rounded-[3rem] mb-8" controls autoPlay />
-               <h2 className="text-5xl font-black text-sky-900 mb-4">{selectedItem.title[lang]}</h2>
+               <button onClick={() => setSelectedItem(null)} className="absolute top-6 right-6 w-12 h-12 bg-sky-50 rounded-full flex items-center justify-center font-black transition-transform hover:rotate-90">✕</button>
+               <div className="relative aspect-video rounded-[3rem] overflow-hidden mb-8 border-4 border-sky-50 shadow-inner">
+                  <video src={selectedItem.videoUrl} className="w-full h-full object-cover" controls autoPlay />
+               </div>
+               <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-10">
+                 <div className="space-y-2">
+                    <h2 className="text-5xl font-black text-sky-900 tracking-tight">{selectedItem.title[lang]}</h2>
+                    <p className="text-sky-400 font-black italic text-lg">🗣️ "{selectedItem.pronunciation[lang]}"</p>
+                 </div>
+                 <button onClick={() => setIsQuizActive(true)} className="w-full md:w-auto px-12 py-6 bg-yellow-400 text-white rounded-[2rem] font-black text-2xl shadow-[0_10px_0_rgb(202,138,4)] transition-all hover:-translate-y-1 active:translate-y-2 active:shadow-none">Play Quiz! 🎮</button>
+               </div>
                <p className="text-2xl text-sky-800 font-bold mb-8 leading-relaxed">{selectedItem.description[lang]}</p>
-               <div className="flex gap-4">
-                 <button onClick={() => setIsQuizActive(true)} className="flex-1 py-6 bg-yellow-400 text-white rounded-[2rem] font-black text-2xl shadow-lg hover:bg-yellow-500">Play Quiz! 🎮</button>
+               <div className="bg-sky-50 border-4 border-dashed border-sky-200 p-8 rounded-[3rem]">
+                 <h3 className="text-2xl font-black text-sky-600 mb-2">💡 Did You Know?</h3>
+                 <p className="text-xl text-sky-800 font-bold italic leading-relaxed">"{selectedItem.funFact[lang]}"</p>
                </div>
              </div>
           </div>
@@ -179,7 +212,14 @@ const App: React.FC = () => {
 
       {isQuizActive && selectedItem && (
         <QuizModule questions={selectedItem.quiz} lang={lang} onClose={() => setIsQuizActive(false)} onComplete={(score) => {
-          if (score === selectedItem.quiz.length) setMasteredIds(prev => [...prev, selectedItem.id]);
+          if (score === selectedItem.quiz.length) {
+            const newList = [...masteredIds];
+            if (!newList.includes(selectedItem.id)) {
+              newList.push(selectedItem.id);
+              setMasteredIds(newList);
+              localStorage.setItem('palembang-kidz-mastery', JSON.stringify(newList));
+            }
+          }
           setIsQuizActive(false);
         }} />
       )}
