@@ -3,6 +3,26 @@ import React, { useEffect, useRef, useState } from 'react';
 import { GoogleGenAI, LiveServerMessage, Modality } from '@google/genai';
 import { VOICE_AVATARS } from '../constants';
 
+// Helper functions from guidelines for robust encoding/decoding
+function encode(bytes: Uint8Array) {
+  let binary = '';
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+function decode(base64: string) {
+  const binaryString = atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
 const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [isActive, setIsActive] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -22,7 +42,8 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const startSession = async () => {
     setIsConnecting(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+      // Use process.env.API_KEY directly for initialization
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
       const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
@@ -47,7 +68,8 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               const input = e.inputBuffer.getChannelData(0);
               const int16 = new Int16Array(input.length);
               for (let i = 0; i < input.length; i++) int16[i] = input[i] * 32768;
-              const base64 = btoa(String.fromCharCode(...new Uint8Array(int16.buffer)));
+              // Use manual encode function to avoid stack overflow with large arrays
+              const base64 = encode(new Uint8Array(int16.buffer));
               sessionPromise.then(s => s.sendRealtimeInput({ media: { data: base64, mimeType: 'audio/pcm;rate=16000' } }));
             };
             source.connect(processor);
@@ -56,9 +78,7 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           onmessage: async (msg: LiveServerMessage) => {
             if (msg.serverContent?.modelTurn?.parts[0]?.inlineData?.data) {
               const base64 = msg.serverContent.modelTurn.parts[0].inlineData.data;
-              const binary = atob(base64);
-              const bytes = new Uint8Array(binary.length);
-              for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+              const bytes = decode(base64);
               
               const ctx = audioContextRef.current!;
               const int16 = new Int16Array(bytes.buffer);
@@ -66,6 +86,7 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               const channelData = buffer.getChannelData(0);
               for (let i = 0; i < int16.length; i++) channelData[i] = int16[i] / 32768.0;
 
+              // Schedule gapless playback
               nextStartTimeRef.current = Math.max(nextStartTimeRef.current, ctx.currentTime);
               const source = ctx.createBufferSource();
               source.buffer = buffer;

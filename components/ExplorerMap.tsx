@@ -7,9 +7,11 @@ interface Props {
   lang: Language;
   onItemClick: (item: CultureItem) => void;
   completedIds: string[];
+  isBuilderMode?: boolean;
+  onEditClick?: (item: CultureItem) => void;
 }
 
-const ExplorerMap: React.FC<Props> = ({ items, lang, onItemClick, completedIds }) => {
+const ExplorerMap: React.FC<Props> = ({ items, lang, onItemClick, completedIds, isBuilderMode, onEditClick }) => {
   return (
     <div className="relative w-full aspect-[16/9] bg-sky-200 rounded-[3rem] overflow-hidden border-[12px] border-white shadow-2xl fade-in group">
       {/* Stylized Musi River (SVG Path) */}
@@ -41,15 +43,27 @@ const ExplorerMap: React.FC<Props> = ({ items, lang, onItemClick, completedIds }
         {items.filter(i => i.mapPos).map((item) => {
           const isDone = completedIds.includes(item.id);
           return (
-            <button
+            <div
               key={item.id}
-              onClick={() => onItemClick(item)}
-              className="absolute transform -translate-x-1/2 -translate-y-1/2 hover:z-20 transition-all duration-300 group/pin outline-none"
+              className="absolute transform -translate-x-1/2 -translate-y-1/2 hover:z-20 transition-all duration-300 group/pin"
               style={{ left: `${item.mapPos!.x}%`, top: `${item.mapPos!.y}%` }}
             >
+              {/* Builder Mode Action Button */}
+              {isBuilderMode && (
+                <button 
+                  onClick={(e) => { e.stopPropagation(); onEditClick?.(item); }}
+                  className="absolute -top-8 left-1/2 -translate-x-1/2 z-50 bg-emerald-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 border-white animate-bounce"
+                >
+                  <span className="text-sm">🛠️</span>
+                </button>
+              )}
+
               {/* Bouncing Pin Wrapper */}
-              <div className="relative flex flex-col items-center animate-float" style={{ animationDelay: `${Math.random() * 2}s` }}>
-                
+              <button
+                onClick={() => onItemClick(item)}
+                className="relative flex flex-col items-center animate-float outline-none"
+                style={{ animationDelay: `${Math.random() * 2}s` }}
+              >
                 {/* Pin Tooltip/Preview */}
                 <div className="absolute -top-36 opacity-0 group-hover/pin:opacity-100 transition-all duration-500 scale-50 group-hover/pin:scale-100 -translate-y-4 group-hover/pin:translate-y-0 pointer-events-none z-30">
                   <div className="clay-card bg-white p-3 w-44 flex flex-col items-center gap-2 border-b-8 border-sky-100 shadow-2xl">
@@ -87,8 +101,8 @@ const ExplorerMap: React.FC<Props> = ({ items, lang, onItemClick, completedIds }
                   w-10 h-2 bg-black/10 rounded-full mt-3 blur-sm transition-all duration-300
                   group-hover/pin:bg-black/20 group-hover/pin:scale-x-150 group-hover/pin:blur-md
                 `} />
-              </div>
-            </button>
+              </button>
+            </div>
           );
         })}
       </div>

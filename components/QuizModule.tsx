@@ -58,7 +58,7 @@ const QuizModule: React.FC<Props> = ({ questions, lang, onComplete, onClose }) =
           setIsFinished(true);
           onComplete(newScore);
         }
-      }, 1500);
+      }, 1800);
     } else {
       if (navigator.vibrate) {
         // Error heavy-tap haptic
@@ -109,10 +109,10 @@ const QuizModule: React.FC<Props> = ({ questions, lang, onComplete, onClose }) =
         <div className="clay-card bg-white p-12 max-w-lg w-full text-center relative overflow-hidden fade-in border-b-[12px] border-sky-200">
           
           {(isPerfect || isHighScore) && (
-            <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0 pointer-events-none z-0">
               <LottiePlayer 
                 url="https://lottie.host/9e4d5884-6997-4007-96a1-633005a76953/6pW6O5ZOnA.json" 
-                className="w-full h-full opacity-60 scale-125"
+                className="w-full h-full opacity-40 scale-150"
                 loop={true}
               />
             </div>
@@ -175,14 +175,14 @@ const QuizModule: React.FC<Props> = ({ questions, lang, onComplete, onClose }) =
       {showStreakCelebration && (
         <div className="absolute inset-0 z-[60] pointer-events-none flex items-center justify-center animate-bounce">
           <div className="relative">
-            <div className="w-80 h-80">
+            <div className="w-[30rem] h-[30rem]">
               <LottiePlayer 
                 url="https://lottie.host/626d9101-70e1-451e-9243-913495147f20/vL6T9H6w8b.json" 
                 className="w-full h-full"
               />
             </div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center whitespace-nowrap">
-              <h4 className="text-6xl font-black text-white drop-shadow-[0_8px_0_rgba(0,0,0,0.2)] rotate-[-10deg]">
+              <h4 className="text-7xl font-black text-white drop-shadow-[0_10px_0_rgba(0,0,0,0.3)] animate-clay-jerky">
                 {streak} COMBO! 🔥
               </h4>
             </div>
@@ -246,18 +246,19 @@ const QuizModule: React.FC<Props> = ({ questions, lang, onComplete, onClose }) =
                 )}
               </div>
             ) : (
-              <>
-                <div className="w-48 h-48">
+              <div className="flex flex-col items-center">
+                <div className="w-64 h-64">
                   <LottiePlayer 
                     url="https://lottie.host/29e16053-96b6-4074-9548-d306b38c2f1f/o8N2V5z6pM.json"
                     className="w-full h-full"
                     loop={false}
                   />
                 </div>
-                <h3 className="text-4xl font-black mt-4 tracking-tighter text-green-500">
+                <h3 className="text-5xl font-black mt-2 tracking-tighter text-green-500 animate-clay-jerky">
                   YES! ⚡
                 </h3>
-              </>
+                <p className="text-sky-900/40 font-black mt-2">Next challenge incoming...</p>
+              </div>
             )}
           </div>
         )}

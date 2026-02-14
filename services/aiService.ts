@@ -3,11 +3,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Language, AiHeritageInsight } from "../types";
 
 export class AIService {
-  private ai: GoogleGenAI;
-
-  constructor() {
-    this.ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || '' });
-  }
+  // Removed static member to ensure fresh initialization as per guidelines
 
   async getKidFriendlyExplanation(itemName: string, lang: Language): Promise<AiHeritageInsight> {
     const prompt = `
@@ -24,7 +20,9 @@ export class AIService {
     `;
 
     try {
-      const response = await this.ai.models.generateContent({
+      // Create a new GoogleGenAI instance right before making an API call
+      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+      const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt,
         config: {
@@ -57,7 +55,8 @@ export class AIService {
     const prompt = `A 3D claymation style creation of: ${description}. Soft clay textures, whimsical, friendly, vibrant colors, studio lighting, high detail, masterpiece, centered on a plain white pedestal background.`;
     
     try {
-      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || '' });
+      // Always use the official model and initialization pattern
+      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
         contents: { parts: [{ text: prompt }] },
@@ -82,7 +81,8 @@ export class AIService {
     const prompt = `Translate this sentence to informal Palembang dialect (Baso Palembang): "${text}". Keep it friendly and authentic. Just return the translated text.`;
     
     try {
-      const response = await this.ai.models.generateContent({
+      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+      const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt
       });
@@ -102,7 +102,8 @@ export class AIService {
     `;
 
     try {
-      const response = await this.ai.models.generateContent({
+      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+      const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt
       });
