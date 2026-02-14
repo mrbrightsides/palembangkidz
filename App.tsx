@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { CultureItem, Language, AiHeritageInsight, ScrapbookSticker } from './types';
 import { CULTURE_DATA, UI_STRINGS, VOICE_AVATARS } from './constants';
@@ -16,6 +15,7 @@ import SoundscapeMixer from './components/SoundscapeMixer';
 import DialectDecoder from './components/DialectDecoder';
 import Scrapbook from './components/Scrapbook';
 import BuilderModal from './components/BuilderModal';
+import PuzzledWords from './components/PuzzledWords';
 import { audioService } from './services/audioService';
 import { aiService } from './services/aiService';
 
@@ -51,7 +51,8 @@ const App: React.FC = () => {
     mixer: false,
     decoder: false,
     passport: false,
-    quizHub: false
+    quizHub: false,
+    puzzledWords: false
   });
 
   // Persisted States
@@ -175,7 +176,7 @@ const App: React.FC = () => {
       <BackgroundMusic />
 
       {/* Main Sidebar Navigation */}
-      <div className="fixed top-1/2 -translate-y-1/2 left-6 z-[150] flex flex-col gap-5">
+      <div className="fixed top-1/2 -translate-y-1/2 left-6 z-[150] flex flex-col gap-4">
         <button onClick={() => toggleModal('live')} className="group relative w-16 h-16 bg-sky-500 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
           <span className="text-3xl">🗣️</span>
           <span className="absolute left-20 bg-sky-800 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Talk to Zephyr</span>
@@ -188,6 +189,11 @@ const App: React.FC = () => {
         <button onClick={() => toggleModal('quizHub')} className="group relative w-16 h-16 bg-yellow-400 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
           <span className="text-3xl animate-bounce">🏆</span>
           <span className="absolute left-20 bg-yellow-600 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Quiz Quest Hub</span>
+        </button>
+
+        <button onClick={() => toggleModal('puzzledWords')} className="group relative w-16 h-16 bg-purple-400 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
+          <span className="text-3xl">🔤</span>
+          <span className="absolute left-20 bg-purple-600 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Puzzled Words</span>
         </button>
 
         <button onClick={() => toggleModal('race')} className="group relative w-16 h-16 bg-orange-500 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
@@ -289,6 +295,7 @@ const App: React.FC = () => {
       {activeModals.live && <LiveTeacher onClose={() => toggleModal('live')} />}
       {activeModals.studio && <ClayifyStudio onClose={() => toggleModal('studio')} />}
       {activeModals.race && <MusiRace onClose={() => toggleModal('race')} />}
+      {activeModals.puzzledWords && <PuzzledWords lang={lang} onClose={() => toggleModal('puzzledWords')} />}
       {activeModals.decoder && <DialectDecoder onClose={() => toggleModal('decoder')} />}
       {activeModals.mixer && <SoundscapeMixer onClose={() => toggleModal('mixer')} />}
       {activeModals.passport && (
