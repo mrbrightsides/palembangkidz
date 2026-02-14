@@ -375,6 +375,15 @@ const App: React.FC = () => {
                  <div className="bg-orange-50 border-4 border-dashed border-orange-200 p-8 rounded-[3rem] relative overflow-hidden"><h3 className="text-xl font-black text-orange-600 mb-4 flex items-center gap-2"><span>✨</span> Did You Know?</h3><p className="text-xl text-orange-900/80 font-bold italic">"{selectedItem.funFact[modalLang]}"</p></div>
                  <div ref={aiSectionRef} className="bg-sky-50 border-4 border-sky-100 p-8 rounded-[3rem] flex flex-col min-h-[200px]">{isAiLoading ? <div className="flex-1 flex flex-col items-center justify-center gap-2"><div className="w-20 h-20 animate-spin border-4 border-sky-400 border-t-transparent rounded-full" /><p className="text-sky-400 font-black">Consulting the ancients...</p></div> : aiInsight ? <div className="space-y-4 fade-in"><div><span className="text-[10px] font-black text-sky-300 uppercase block mb-1">📜 Legend</span><p className="font-bold text-sky-900/70">{aiInsight.originStory}</p></div><div className="bg-white/50 p-4 rounded-2xl border-2 border-white/80"><span className="text-[10px] font-black text-orange-400 uppercase block mb-1">🌈 Cool Factor</span><p className="font-black text-sky-900">{aiInsight.coolFactor}</p></div></div> : <p className="text-sky-900/30 font-bold text-center italic py-10">Tap for AI Teacher's Secret!</p>}</div>
                </div>
+
+               <div className="flex justify-center pt-8 border-t-4 border-sky-50">
+                  <button 
+                    onClick={() => setSelectedItem(null)} 
+                    className="px-10 py-4 bg-gray-100 text-gray-500 rounded-full font-black text-lg hover:bg-gray-200 transition active:scale-95"
+                  >
+                    Close Discovery Center
+                  </button>
+               </div>
              </div>
           </div>
         </div>
