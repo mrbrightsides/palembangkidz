@@ -10,7 +10,22 @@ interface Letter {
   id: number;
 }
 
-const PuzzledWords: React.FC<{ lang: Language, onClose: () => void }> = ({ lang, onClose }) => {
+// Fixed: Added solvedCount, onWordSolved, and onEarnBadge to props interface
+interface PuzzledWordsProps {
+  lang: Language;
+  onClose: () => void;
+  solvedCount: number;
+  onWordSolved: () => void;
+  onEarnBadge: (badgeId: string) => void;
+}
+
+const PuzzledWords: React.FC<PuzzledWordsProps> = ({ 
+  lang, 
+  onClose,
+  solvedCount,
+  onWordSolved,
+  onEarnBadge
+}) => {
   const [targetWord, setTargetWord] = useState('');
   const [scrambledLetters, setScrambledLetters] = useState<Letter[]>([]);
   const [userLetters, setUserLetters] = useState<(Letter | null)[]>([]);
@@ -63,6 +78,11 @@ const PuzzledWords: React.FC<{ lang: Language, onClose: () => void }> = ({ lang,
     
     if (currentString === targetStringNoSpaces) {
       setIsWon(true);
+      // Fixed: Trigger game logic callbacks on win to fix parent component errors
+      onWordSolved();
+      if (solvedCount + 1 >= 5) onEarnBadge('word-wizard');
+      if (solvedCount + 1 >= 10) onEarnBadge('dialect-master');
+
       audioService.playEffect('success');
       if (navigator.vibrate) navigator.vibrate([10, 50, 10]);
     } else if (currentString.length === targetStringNoSpaces.length) {
@@ -154,6 +174,11 @@ const PuzzledWords: React.FC<{ lang: Language, onClose: () => void }> = ({ lang,
           </div>
           <h2 className="text-3xl md:text-4xl font-black text-purple-900 mt-4 tracking-tight">Puzzled Words</h2>
           <p className="text-purple-400 font-bold">Unscramble the secret Palembang name!</p>
+          {/* Display solved count from props */}
+          <div className="mt-2 inline-flex items-center gap-2 bg-purple-50 px-4 py-1 rounded-full border border-purple-100">
+            <span className="text-xs font-black text-purple-400">Words Decoded:</span>
+            <span className="text-lg font-black text-purple-600">{solvedCount}</span>
+          </div>
         </div>
 
         {/* Game Area */}

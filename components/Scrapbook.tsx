@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { CultureItem, Language, ScrapbookSticker } from '../types';
 import { CULTURE_DATA } from '../constants';
 
+// Fixed: Updated Props interface to include earnedBadgeIds
 interface Props {
   completedIds: string[];
   masteredIds: string[];
@@ -10,6 +11,7 @@ interface Props {
   onClose: () => void;
   stickers: ScrapbookSticker[];
   onUpdateStickers: (stickers: ScrapbookSticker[]) => void;
+  earnedBadgeIds: string[];
 }
 
 const Scrapbook: React.FC<Props> = ({ 
@@ -18,7 +20,8 @@ const Scrapbook: React.FC<Props> = ({
   lang, 
   onClose, 
   stickers, 
-  onUpdateStickers 
+  onUpdateStickers,
+  earnedBadgeIds
 }) => {
   const [activeStickerId, setActiveStickerId] = useState<string | null>(null);
 
@@ -83,6 +86,22 @@ const Scrapbook: React.FC<Props> = ({
               );
             })}
           </div>
+
+          {/* Fixed: Added earnedBadgeIds display to fix type error and enhance UI */}
+          {earnedBadgeIds && earnedBadgeIds.length > 0 && (
+            <div className="mt-8">
+              <h3 className="text-xl font-black text-orange-900 mb-4 flex items-center gap-2">
+                <span>🏅</span> Badges
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {earnedBadgeIds.map((badgeId) => (
+                  <div key={badgeId} className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-md border-2 border-yellow-400 animate-pulse" title={badgeId}>
+                    <span className="text-2xl">🎖️</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           
           {activeStickerId && (
             <div className="mt-8 p-4 bg-white rounded-2xl border-2 border-orange-100 shadow-sm fade-in">

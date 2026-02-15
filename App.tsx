@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { CultureItem, Language, AiHeritageInsight, ScrapbookSticker } from './types';
 import { CULTURE_DATA, UI_STRINGS, VOICE_AVATARS } from './constants';
@@ -75,6 +76,16 @@ const App: React.FC = () => {
   const [mediaOverrides, setMediaOverrides] = useState<Record<string, { imageUrl: string; videoUrl: string }>>(() => {
     const saved = localStorage.getItem('palembang-kidz-media-overrides');
     return saved ? JSON.parse(saved) : {};
+  });
+
+  // Persisted Game States
+  const [solvedCount, setSolvedCount] = useState<number>(() => {
+    const saved = localStorage.getItem('palembang-kidz-puzzled-solved');
+    return saved ? parseInt(saved) : 0;
+  });
+  const [earnedBadgeIds, setEarnedBadgeIds] = useState<string[]>(() => {
+    const saved = localStorage.getItem('palembang-kidz-badges');
+    return saved ? JSON.parse(saved) : [];
   });
 
   // AI states for details
@@ -157,7 +168,6 @@ const App: React.FC = () => {
         console.log('Share failed or cancelled');
       }
     } else {
-      // Fallback: Copy to clipboard
       try {
         await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
         setIsCopying(true);
@@ -169,11 +179,38 @@ const App: React.FC = () => {
     }
   };
 
+  const handleWordSolved = () => {
+    const newCount = solvedCount + 1;
+    setSolvedCount(newCount);
+    localStorage.setItem('palembang-kidz-puzzled-solved', newCount.toString());
+  };
+
+  const handleEarnBadge = (badgeId: string) => {
+    if (!earnedBadgeIds.includes(badgeId)) {
+      const newList = [...earnedBadgeIds, badgeId];
+      setEarnedBadgeIds(newList);
+      localStorage.setItem('palembang-kidz-badges', JSON.stringify(newList));
+    }
+  };
+
   if (isLoading) return <LoadingScreen />;
 
   return (
     <div className="min-h-screen pb-20 fade-in bg-[#bce7ff] relative overflow-x-hidden">
       <BackgroundMusic />
+
+      {/* Partner Logos Top Left */}
+      <div className="fixed top-6 left-6 z-[160] flex items-center h-14 px-5 glass-panel rounded-[1.2rem] shadow-lg border-2 border-white/50 overflow-hidden">
+        <img 
+          src="https://i.imgur.com/01RCthC.png" 
+          alt="Partners: Kemdikbud, Dana Indonesiana, LPDP" 
+          className="h-9 object-contain opacity-90 hover:opacity-100 transition-opacity"
+          onError={(e) => {
+            // Fallback for demo if the URL is not reachable - keeping the aesthetic
+            (e.target as HTMLImageElement).src = "https://placehold.co/300x60/ffffff/075985?text=KEMENDIKBUD+%7C+DANA+INDONESIANA+%7C+LPDP&font=quicksand";
+          }}
+        />
+      </div>
 
       {/* Main Sidebar Navigation */}
       <div className="fixed top-1/2 -translate-y-1/2 left-6 z-[150] flex flex-col gap-4">
@@ -224,7 +261,7 @@ const App: React.FC = () => {
         </button>
       </div>
 
-      {/* Top Bar */}
+      {/* Top Bar Right */}
       <div className="fixed top-6 right-6 z-50 flex items-center gap-4">
         <button onClick={() => toggleModal('mixer')} className="w-14 h-14 bg-white/80 backdrop-blur rounded-[1.2rem] flex items-center justify-center shadow-lg border-2 border-white/50 hover:bg-white transition-all active:scale-90">
            <span className="text-2xl">🔊</span>
@@ -242,7 +279,7 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      <header className="pt-16 pb-6 flex flex-col items-center px-6">
+      <header className="pt-24 pb-6 flex flex-col items-center px-6">
         <div className="text-center">
           <h1 className="text-6xl md:text-8xl font-black tracking-tighter drop-shadow-sm text-sky-900 cursor-default select-none">
             Palembang<span className="text-orange-500">Kidz</span>
@@ -295,7 +332,15 @@ const App: React.FC = () => {
       {activeModals.live && <LiveTeacher onClose={() => toggleModal('live')} />}
       {activeModals.studio && <ClayifyStudio onClose={() => toggleModal('studio')} />}
       {activeModals.race && <MusiRace onClose={() => toggleModal('race')} />}
-      {activeModals.puzzledWords && <PuzzledWords lang={lang} onClose={() => toggleModal('puzzledWords')} />}
+      {activeModals.puzzledWords && (
+        <PuzzledWords 
+          lang={lang} 
+          onClose={() => toggleModal('puzzledWords')} 
+          solvedCount={solvedCount}
+          onWordSolved={handleWordSolved}
+          onEarnBadge={handleEarnBadge}
+        />
+      )}
       {activeModals.decoder && <DialectDecoder onClose={() => toggleModal('decoder')} />}
       {activeModals.mixer && <SoundscapeMixer onClose={() => toggleModal('mixer')} />}
       {activeModals.passport && (
@@ -306,6 +351,7 @@ const App: React.FC = () => {
           stickers={stickers}
           onUpdateStickers={(s) => { setStickers(s); localStorage.setItem('palembang-kidz-stickers', JSON.stringify(s)); }}
           onClose={() => toggleModal('passport')} 
+          earnedBadgeIds={earnedBadgeIds}
         />
       )}
       {editingItem && <BuilderModal item={editingItem} lang={lang} onSave={(id, up) => {
@@ -338,7 +384,6 @@ const App: React.FC = () => {
              <div className="p-8 md:p-12">
                <div className="relative aspect-video rounded-[3rem] overflow-hidden mb-10 border-8 border-sky-50 shadow-2xl bg-sky-50">
                  <video src={selectedItem.videoUrl} className="w-full h-full object-cover" controls autoPlay />
-                 {/* Difficulty Badge */}
                  <div className={`absolute bottom-6 right-6 px-6 py-2 rounded-full font-black text-sm border-4 border-white shadow-lg uppercase tracking-widest ${
                    selectedItem.difficulty === 'Easy' ? 'bg-emerald-500 text-white' :
                    selectedItem.difficulty === 'Medium' ? 'bg-yellow-500 text-white' : 'bg-red-500 text-white'
@@ -365,7 +410,6 @@ const App: React.FC = () => {
                  }} disabled={isAiLoading} className="px-10 py-5 bg-sky-600 text-white rounded-[2rem] font-black text-xl shadow-[0_10px_0_rgb(8,145,178)] hover:-translate-y-1 active:translate-y-1 active:shadow-none transition-all">Teacher's Secret 🧙‍♂️</button>
                </div>
                
-               {/* Expandable Description */}
                <div className="mb-12">
                  <p className={`text-2xl text-sky-800 font-bold opacity-90 leading-relaxed ${descExpanded ? '' : 'line-clamp-3'}`}>
                    {selectedItem.description[modalLang]}
