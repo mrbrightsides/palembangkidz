@@ -208,7 +208,7 @@ const App: React.FC = () => {
       {/* Partner Logos Top Left */}
       <div className="fixed top-6 left-6 z-[160] flex items-center h-14 px-5 glass-panel rounded-[1.2rem] shadow-lg border-2 border-white/50 overflow-hidden">
         <img 
-          src="https://raw.githubusercontent.com/mrbrightsides/palembangkidz/main/public/partners-strip.png" 
+          src="https://i.imgur.com/01RCthC.png" 
           alt="Partners: Kemdikbud, Dana Indonesiana, LPDP" 
           className="h-9 object-contain opacity-90 hover:opacity-100 transition-opacity"
           onError={(e) => {
