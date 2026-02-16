@@ -1,7 +1,9 @@
+
 {
   "name": "PalembangKidz - Immersive Culture Explorer",
   "description": "An interactive educational platform teaching Palembang culture to children through video-first cards, multilingual narration (ID, EN, PLM), and gamified quizzes using Gemini AI.",
   "requestFramePermissions": [
-    "microphone"
+    "microphone",
+    "camera"
   ]
 }

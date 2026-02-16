@@ -17,6 +17,9 @@ import DialectDecoder from './components/DialectDecoder';
 import Scrapbook from './components/Scrapbook';
 import BuilderModal from './components/BuilderModal';
 import PuzzledWords from './components/PuzzledWords';
+import FindDifference from './components/FindDifference';
+import PhotoBooth from './components/PhotoBooth';
+import StoryMode from './components/StoryMode';
 import { audioService } from './services/audioService';
 import { aiService } from './services/aiService';
 
@@ -53,7 +56,10 @@ const App: React.FC = () => {
     decoder: false,
     passport: false,
     quizHub: false,
-    puzzledWords: false
+    puzzledWords: false,
+    difference: false,
+    photoBooth: false,
+    story: false
   });
 
   // Persisted States
@@ -202,11 +208,10 @@ const App: React.FC = () => {
       {/* Partner Logos Top Left */}
       <div className="fixed top-6 left-6 z-[160] flex items-center h-14 px-5 glass-panel rounded-[1.2rem] shadow-lg border-2 border-white/50 overflow-hidden">
         <img 
-          src="https://i.imgur.com/01RCthC.png" 
+          src="https://raw.githubusercontent.com/mrbrightsides/palembangkidz/main/public/partners-strip.png" 
           alt="Partners: Kemdikbud, Dana Indonesiana, LPDP" 
           className="h-9 object-contain opacity-90 hover:opacity-100 transition-opacity"
           onError={(e) => {
-            // Fallback for demo if the URL is not reachable - keeping the aesthetic
             (e.target as HTMLImageElement).src = "https://placehold.co/300x60/ffffff/075985?text=KEMENDIKBUD+%7C+DANA+INDONESIANA+%7C+LPDP&font=quicksand";
           }}
         />
@@ -214,18 +219,34 @@ const App: React.FC = () => {
 
       {/* Main Sidebar Navigation */}
       <div className="fixed top-1/2 -translate-y-1/2 left-6 z-[150] flex flex-col gap-4">
+        <button onClick={() => toggleModal('story')} className="group relative w-16 h-16 bg-pink-500 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
+          <span className="text-3xl">📖</span>
+          <span className="absolute left-20 bg-pink-800 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Story Mode</span>
+        </button>
+
         <button onClick={() => toggleModal('live')} className="group relative w-16 h-16 bg-sky-500 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
           <span className="text-3xl">🗣️</span>
           <span className="absolute left-20 bg-sky-800 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Talk to Zephyr</span>
         </button>
+
         <button onClick={() => toggleModal('studio')} className="group relative w-16 h-16 bg-indigo-500 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
           <span className="text-3xl">🎨</span>
           <span className="absolute left-20 bg-indigo-800 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Clay Studio</span>
+        </button>
+
+        <button onClick={() => toggleModal('photoBooth')} className="group relative w-16 h-16 bg-emerald-400 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
+          <span className="text-3xl">📸</span>
+          <span className="absolute left-20 bg-emerald-800 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Photo Booth</span>
         </button>
         
         <button onClick={() => toggleModal('quizHub')} className="group relative w-16 h-16 bg-yellow-400 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
           <span className="text-3xl animate-bounce">🏆</span>
           <span className="absolute left-20 bg-yellow-600 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Quiz Quest Hub</span>
+        </button>
+
+        <button onClick={() => toggleModal('difference')} className="group relative w-16 h-16 bg-cyan-400 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
+          <span className="text-3xl">🧩</span>
+          <span className="absolute left-20 bg-cyan-700 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Find Differences</span>
         </button>
 
         <button onClick={() => toggleModal('puzzledWords')} className="group relative w-16 h-16 bg-purple-400 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
@@ -238,11 +259,6 @@ const App: React.FC = () => {
           <span className="absolute left-20 bg-orange-800 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">River Race Game</span>
         </button>
 
-        <button onClick={() => toggleModal('decoder')} className="group relative w-16 h-16 bg-emerald-500 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
-          <span className="text-3xl">⚙️</span>
-          <span className="absolute left-20 bg-emerald-800 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Dialect Decoder</span>
-        </button>
-        
         <div className="w-16 h-1 bg-white/20 rounded-full mx-auto" />
         
         <button onClick={() => toggleModal('passport')} className="group relative w-16 h-16 bg-white rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-sky-100 transition-all hover:scale-110 active:scale-95">
@@ -329,8 +345,11 @@ const App: React.FC = () => {
           onComplete={handleQuizComplete} 
         />
       )}
+      {activeModals.story && <StoryMode lang={lang} onClose={() => toggleModal('story')} />}
       {activeModals.live && <LiveTeacher onClose={() => toggleModal('live')} />}
       {activeModals.studio && <ClayifyStudio onClose={() => toggleModal('studio')} />}
+      {activeModals.photoBooth && <PhotoBooth onClose={() => toggleModal('photoBooth')} />}
+      {activeModals.difference && <FindDifference lang={lang} onClose={() => toggleModal('difference')} />}
       {activeModals.race && <MusiRace onClose={() => toggleModal('race')} />}
       {activeModals.puzzledWords && (
         <PuzzledWords 

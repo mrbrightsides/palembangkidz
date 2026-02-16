@@ -1,10 +1,8 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { Language, AiHeritageInsight } from "../types";
+import { Language, AiHeritageInsight, StorySegment, Difference } from "../types";
 
 export class AIService {
-  // Fresh initialization as per guidelines
-
   async getKidFriendlyExplanation(itemName: string, lang: Language): Promise<AiHeritageInsight> {
     const prompt = `
       You are a magical 3D claymation Palembang culture tutor.
@@ -20,7 +18,7 @@ export class AIService {
     `;
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt,
@@ -94,6 +92,126 @@ export class AIService {
     } catch (error) {
       console.error("Image Gen Error:", error);
       return null;
+    }
+  }
+
+  async generateDifferenceSet(topic: string): Promise<{ base: string, modified: string, differences: Difference[] }> {
+    const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+    
+    // Step 1: Define differences and prompts
+    const diffSpecPrompt = `Create a "Find the Difference" game spec for the topic: ${topic}. 
+    Define exactly 3 subtle differences. For each difference, provide a x and y coordinate (0-100) and a brief description.
+    Also provide a specific instruction for how to modify the base image to create these differences.`;
+    
+    const specRes = await ai.models.generateContent({
+      model: 'gemini-3-flash-preview',
+      contents: diffSpecPrompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            basePrompt: { type: Type.STRING },
+            editInstruction: { type: Type.STRING },
+            differences: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  id: { type: Type.STRING },
+                  x: { type: Type.NUMBER },
+                  y: { type: Type.NUMBER },
+                  description: { type: Type.STRING }
+                },
+                required: ["id", "x", "y", "description"]
+              }
+            }
+          },
+          required: ["basePrompt", "editInstruction", "differences"]
+        }
+      }
+    });
+
+    const spec = JSON.parse(specRes.text || '{}');
+    
+    // Step 2: Generate base image
+    const baseImg = await this.generateClayImage(spec.basePrompt);
+    
+    // Step 3: Generate modified image (editing)
+    const modifiedResponse = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-image',
+      contents: {
+        parts: [
+          { inlineData: { data: baseImg!.split(',')[1], mimeType: 'image/png' } },
+          { text: spec.editInstruction }
+        ]
+      }
+    });
+
+    let modifiedImg = baseImg;
+    for (const part of modifiedResponse.candidates[0].content.parts) {
+      if (part.inlineData) {
+        modifiedImg = `data:image/png;base64,${part.inlineData.data}`;
+      }
+    }
+
+    return {
+      base: baseImg!,
+      modified: modifiedImg!,
+      differences: spec.differences.map((d: any) => ({ ...d, found: false }))
+    };
+  }
+
+  async getStorySegment(currentPrompt: string, lang: Language): Promise<StorySegment> {
+    const prompt = `
+      You are an interactive storyteller for kids.
+      Current Situation: ${currentPrompt}
+      Language: ${lang}.
+      Task: Continue the adventure in Palembang. 
+      Incorporate landmarks like Ampera Bridge, Pempek, or Srivijaya.
+      Return exactly 1 text block (max 3 sentences), 2-3 choices for the child, 
+      a visual prompt for a claymation image, and a character expression.
+    `;
+
+    try {
+      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+      const response = await ai.models.generateContent({
+        model: 'gemini-3-pro-preview',
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              text: { type: Type.STRING },
+              choices: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    text: { type: Type.STRING },
+                    nextPrompt: { type: Type.STRING }
+                  },
+                  required: ["text", "nextPrompt"]
+                }
+              },
+              visualPrompt: { type: Type.STRING },
+              characterExpression: { type: Type.STRING, enum: ["happy", "thinking", "excited", "wise"] }
+            },
+            required: ["text", "choices", "visualPrompt", "characterExpression"]
+          }
+        }
+      });
+
+      return JSON.parse(response.text || '{}') as StorySegment;
+    } catch (e) {
+      console.error(e);
+      return {
+        text: "The story is taking a magic nap! Try again soon.",
+        choices: [{ text: "Restart", nextPrompt: "Start of the adventure in Palembang" }],
+        visualPrompt: "A cozy claymation library",
+        characterExpression: "wise"
+      };
     }
   }
 

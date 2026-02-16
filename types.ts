@@ -13,6 +13,8 @@ export interface AiHeritageInsight {
   secretChallenge: string;
 }
 
+export type Difficulty = 'Easy' | 'Medium' | 'Hard';
+
 export interface CultureItem {
   id: string;
   title: Record<Language, string>;
@@ -24,6 +26,7 @@ export interface CultureItem {
   voiceoverScript: Record<Language, string>;
   quiz: QuizQuestion[];
   mapPos?: { x: number; y: number };
+  difficulty: Difficulty;
 }
 
 export interface ScrapbookSticker {
@@ -33,6 +36,21 @@ export interface ScrapbookSticker {
   posY: number;
   rotation: number;
   scale: number;
+}
+
+export interface Difference {
+  id: string;
+  x: number; // 0-100 percentage
+  y: number; // 0-100 percentage
+  description: string;
+  found: boolean;
+}
+
+export interface StorySegment {
+  text: string;
+  choices: { text: string; nextPrompt: string }[];
+  visualPrompt: string;
+  characterExpression: 'happy' | 'thinking' | 'excited' | 'wise';
 }
 
 export interface AppState {
