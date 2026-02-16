@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { CultureItem, Language } from '../types';
 import { audioService } from '../services/audioService';
@@ -32,13 +31,16 @@ const CultureCard: React.FC<Props> = ({
   const [localLang, setLocalLang] = useState<Language>(globalLang);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [simplifiedText, setSimplifiedText] = useState<string | null>(null);
+  const [coolFactor, setCoolFactor] = useState<string | null>(null);
   const [isSimplifying, setIsSimplifying] = useState(false);
+  const [isCoolLoading, setIsCoolLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // Sync with global language changes, but allow local overrides
   useEffect(() => {
     setLocalLang(globalLang);
     setSimplifiedText(null); // Reset simplified text when language changes globally
+    setCoolFactor(null); // Reset cool factor when language changes globally
   }, [globalLang]);
 
   const handleMouseEnter = () => {
@@ -63,12 +65,13 @@ const CultureCard: React.FC<Props> = ({
     if (navigator.vibrate) navigator.vibrate(5);
     setLocalLang(newLang);
     setSimplifiedText(null); // Reset when toggling specifically on this card
+    setCoolFactor(null); // Reset when toggling specifically on this card
   };
 
   const handleSpeak = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (navigator.vibrate) navigator.vibrate(15);
-    audioService.speak(simplifiedText || item.voiceoverScript[localLang], 'Kore');
+    audioService.speak(coolFactor || simplifiedText || item.voiceoverScript[localLang], 'Kore');
   };
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
@@ -108,6 +111,7 @@ const CultureCard: React.FC<Props> = ({
     if (navigator.vibrate) navigator.vibrate([10, 30]);
     audioService.playEffect('success');
     setIsSimplifying(true);
+    setCoolFactor(null); // Clear cool factor if simplifying
     
     const simple = await aiService.getSimplifiedSummary(item.description[localLang], localLang);
     setSimplifiedText(simple);
@@ -115,6 +119,27 @@ const CultureCard: React.FC<Props> = ({
     
     // Auto speak the simplified version
     audioService.speak(simple, 'Puck');
+  };
+
+  const handleCoolFactor = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isCoolLoading || coolFactor) {
+      if (coolFactor) setCoolFactor(null); // Toggle back
+      return;
+    }
+
+    if (navigator.vibrate) navigator.vibrate([20, 40]);
+    audioService.playEffect('success');
+    setIsCoolLoading(true);
+    setSimplifiedText(null); // Clear simplified text if showing cool factor
+    
+    // Call the AI Heritage Insight specifically for the 'coolFactor'
+    const insight = await aiService.getKidFriendlyExplanation(item.title[localLang], localLang);
+    setCoolFactor(insight.coolFactor);
+    setIsCoolLoading(false);
+    
+    // Auto speak the cool factor version
+    audioService.speak(insight.coolFactor, 'Zephyr');
   };
 
   const handleSocialShare = async (platform: 'wa' | 'tw' | 'fb' | 'copy') => {
@@ -290,32 +315,45 @@ const CultureCard: React.FC<Props> = ({
           {item.title[localLang]}
         </h3>
 
-        {/* Short Description Snippet with Magic Simplify Button */}
-        <div className="mt-3 relative">
-          <p className={`text-sm font-bold text-center leading-relaxed h-10 overflow-hidden transition-all duration-300 ${
-            simplifiedText ? 'text-orange-600' : 'text-sky-800/70'
+        {/* Short Description Snippet with Magic Simplify & Cool Factor Buttons */}
+        <div className="mt-3 relative flex justify-center items-center gap-2">
+          <p className={`text-sm font-bold text-center leading-relaxed h-12 overflow-hidden transition-all duration-300 px-8 ${
+            coolFactor ? 'text-indigo-600' : simplifiedText ? 'text-orange-600' : 'text-sky-800/70'
           }`}>
-            {isSimplifying ? (
+            {isSimplifying || isCoolLoading ? (
               <span className="animate-pulse flex items-center justify-center gap-2">
-                <span className="w-1 h-1 bg-sky-400 rounded-full animate-bounce" />
-                <span className="w-1 h-1 bg-sky-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                <span className="w-1 h-1 bg-sky-400 rounded-full animate-bounce [animation-delay:0.4s]" />
+                <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce" />
+                <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce [animation-delay:0.2s]" />
+                <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce [animation-delay:0.4s]" />
               </span>
             ) : (
-              simplifiedText || item.description[localLang]
+              coolFactor || simplifiedText || item.description[localLang]
             )}
           </p>
-          <button 
-            onClick={handleSimplify}
-            className={`absolute -right-2 top-0 transform translate-x-full w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-md transition-all ${
-              simplifiedText ? 'bg-orange-500 text-white scale-110 rotate-12' : 'bg-white text-orange-400 hover:scale-110'
-            }`}
-            title="Magic Simplified Summary"
-          >
-            <span className={`text-xs ${isSimplifying ? 'animate-spin' : ''}`}>
-              {simplifiedText ? '✨' : '🪄'}
-            </span>
-          </button>
+          <div className="absolute -right-2 top-0 transform translate-x-full flex flex-col gap-1.5">
+            <button 
+              onClick={handleSimplify}
+              className={`w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-md transition-all ${
+                simplifiedText ? 'bg-orange-500 text-white scale-110 rotate-12' : 'bg-white text-orange-400 hover:scale-110'
+              }`}
+              title="Magic Simplified Summary"
+            >
+              <span className={`text-xs ${isSimplifying ? 'animate-spin' : ''}`}>
+                {simplifiedText ? '✨' : '🪄'}
+              </span>
+            </button>
+            <button 
+              onClick={handleCoolFactor}
+              className={`w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-md transition-all ${
+                coolFactor ? 'bg-indigo-500 text-white scale-110 -rotate-12' : 'bg-white text-indigo-400 hover:scale-110'
+              }`}
+              title="Quick AI Cool Factor"
+            >
+              <span className={`text-xs ${isCoolLoading ? 'animate-pulse' : ''}`}>
+                {coolFactor ? '🌟' : '💡'}
+              </span>
+            </button>
+          </div>
         </div>
 
         {/* Quick Language Peek Buttons */}
@@ -350,7 +388,7 @@ const CultureCard: React.FC<Props> = ({
             <span className="text-lg group-hover:animate-bounce">💡</span>
             <span className="absolute -top-1 -right-1 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity delay-100">✨</span>
           </div>
-          <p className="text-[11px] font-black text-orange-900 leading-tight italic line-clamp-3">
+          <p className="text-[11px] font-black text-orange-900 leading-tight italic line-clamp-2">
             "{item.funFact[localLang]}"
           </p>
         </div>
