@@ -355,8 +355,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'The Great Mosque has a unique minaret that looks like buildings in China!',
       plm: 'Masjid Agung iko menaronyo cak bangunan Tiongkok, beda nian kan?'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1591154665854-01fe11287042?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://www.detik.com/sumbagsel/budaya/d-8323664/10-bangunan-bersejarah-palembang-apa-saja',
+    videoUrl: 'https://github.com/user-attachments/assets/a6b9b940-4d0a-409d-bd17-6f7c7b351167',
     voiceoverScript: {
       id: 'Lihatlah Masjid Agung yang megah ini, pusat sejarah kota kita.',
       en: 'Look at this majestic Great Mosque, the historical center of our city.',
