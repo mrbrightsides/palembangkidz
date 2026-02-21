@@ -35,8 +35,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'Originally, the center of Ampera Bridge could be raised to let large ships pass!',
       plm: 'Dulu jembatan iko pacak teangkat tengahnyo, biar kapal besak pacak liwat.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1590424067954-43759902f5a6?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://bams.jambiprov.go.id/wp-content/uploads/2023/10/Jembatan-Ampera-1.png',
+    videoUrl: 'https://github.com/user-attachments/assets/ec2cfd0f-dd8d-4cb8-83cf-f6cb9a0ecfe1',
     voiceoverScript: { id: 'Lihat jembatan merah ini!', en: 'Look at this red bridge!', plm: 'Cubo jingok jembatan abang iko!' },
     quiz: [
       { question: 'Apa warna Jembatan Ampera?', options: ['Biru', 'Hijau', 'Merah', 'Kuning'], correctIndex: 2 },
