@@ -1,0 +1,26 @@
+<svg width="300" height="100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#E63946;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFB800;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#457B9D;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="45" fill="#FFD166" opacity="0.3"/>
+  
+  <!-- Jembatan Ampera stylized -->
+  <rect x="20" y="55" width="60" height="8" fill="#E63946" rx="2"/>
+  <rect x="30" y="35" width="5" height="20" fill="#E63946"/>
+  <rect x="55" y="35" width="5" height="20" fill="#E63946"/>
+  <polygon points="32.5,35 32.5,25 37.5,25 37.5,35" fill="#FFB800"/>
+  <polygon points="57.5,35 57.5,25 62.5,25 62.5,35" fill="#FFB800"/>
+  
+  <!-- Rumah Limas roof -->
+  <polygon points="50,15 30,30 70,30" fill="#457B9D" opacity="0.8"/>
+  
+  <!-- Text -->
+  <text x="110" y="45" font-family="'Bubblegum Sans', cursive" font-size="32" font-weight="bold" fill="url(#gradient1)">PalembangKidz</text>
+  <text x="110" y="70" font-family="Fredoka, sans-serif" font-size="12" fill="#457B9D">Jelajahi Budaya Palembang</text>
+</svg>
