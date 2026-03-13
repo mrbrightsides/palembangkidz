@@ -500,8 +500,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'The fresh sour taste usually comes from pineapple slices!',
       plm: 'Raso asem segernyo iko karno dikasih nanas, tau dak kau?'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1548946522-4ad31345c0f1?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://blog.tokowahab.com/wp-content/uploads/2020/06/Resep-Pindang-Ikan-Patin-Khas-Palembang.jpg',
+    videoUrl: 'https://github.com/user-attachments/assets/c698ebaa-c7a8-4b6b-b046-a514e3a532dc',
     voiceoverScript: {
       id: 'Segar sekali rasa kuah Pindang Patin ini. Pakai nasi hangat ya!',
       en: 'This Pindang Patin soup is so fresh. Eat it with warm rice!',
