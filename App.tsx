@@ -20,8 +20,10 @@ import PuzzledWords from './components/PuzzledWords';
 import FindDifference from './components/FindDifference';
 import PhotoBooth from './components/PhotoBooth';
 import StoryMode from './components/StoryMode';
+import TutorialModal from './components/TutorialModal';
 import { audioService } from './services/audioService';
 import { aiService } from './services/aiService';
+import { HelpCircle } from 'lucide-react';
 
 const getInitialLanguage = (): Language => {
   if (typeof navigator === 'undefined') return 'id';
@@ -97,6 +99,7 @@ const App: React.FC = () => {
   // AI states for details
   const [aiInsight, setAiInsight] = useState<AiHeritageInsight | null>(null);
   const [isAiLoading, setIsAiLoading] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   const aiSectionRef = useRef<HTMLDivElement>(null);
 
   const cultureData = useMemo(() => {
@@ -111,6 +114,13 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 2000);
+    
+    // Check for first visit to show tutorial
+    const hasSeenTutorial = localStorage.getItem('palembang-kidz-tutorial-seen');
+    if (!hasSeenTutorial) {
+      setTimeout(() => setShowTutorial(true), 3000);
+    }
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -199,6 +209,11 @@ const App: React.FC = () => {
     }
   };
 
+  const closeTutorial = () => {
+    setShowTutorial(false);
+    localStorage.setItem('palembang-kidz-tutorial-seen', 'true');
+  };
+
   if (isLoading) return <LoadingScreen />;
 
   return (
@@ -264,6 +279,11 @@ const App: React.FC = () => {
         <button onClick={() => toggleModal('passport')} className="group relative w-16 h-16 bg-white rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-sky-100 transition-all hover:scale-110 active:scale-95">
           <span className="text-3xl">📔</span>
           <span className="absolute left-20 bg-white text-sky-900 px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Scrapbook</span>
+        </button>
+
+        <button onClick={() => setShowTutorial(true)} className="group relative w-16 h-16 bg-blue-400 rounded-[1.5rem] flex items-center justify-center shadow-lg border-4 border-white transition-all hover:scale-110 active:scale-95">
+          <HelpCircle className="w-8 h-8 text-white" />
+          <span className="absolute left-20 bg-blue-800 text-white px-4 py-2 rounded-full text-xs font-black opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-md">Help Guide</span>
         </button>
 
         <button 
@@ -379,6 +399,12 @@ const App: React.FC = () => {
         localStorage.setItem('palembang-kidz-media-overrides', JSON.stringify(newOverrides));
         setEditingItem(null);
       }} onClose={() => setEditingItem(null)} />}
+
+      <TutorialModal 
+        isOpen={showTutorial} 
+        onClose={closeTutorial} 
+        lang={lang} 
+      />
 
       {/* Landmark Details Modal */}
       {selectedItem && (
