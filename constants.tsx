@@ -56,8 +56,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'This fort was built using a mixture containing egg whites as an adhesive for the stones!',
       plm: 'Benteng iko dulu dibuat nempelke batunyo pake putih telok, kuat nian kan?'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://assets.pikiran-rakyat.com/crop/202x171:1477x937/720x0/webp/photo/2024/10/09/1878230934.png',
+    videoUrl: 'https://github.com/user-attachments/assets/002eaa5f-f9d1-4984-bcb9-1fc869ec1074',
     voiceoverScript: { id: 'Ayo jalan-jalan ke Benteng Kuto Besak!', en: 'Let\'s visit Kuto Besak Fort!', plm: 'Payo bejalan ke BKB sore-sore!' },
     quiz: [
       { question: 'BKB adalah singkatan dari?', options: ['Benteng Kuto Besak', 'Batu Kuat Banget', 'Bermain Ke Bukit', 'Banyak Kapal Besar'], correctIndex: 0 },
@@ -81,8 +81,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'There is a "Tree of Love" there; legend says if couples write their names, their love lasts forever!',
       plm: 'Ado "Pohon Cinto" disano, katenyo kalo nulis namo bareng pasangan pacak abadi cintonyo.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1596422846543-75c6fc18a594?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://sumateraekspres.bacakoran.co/upload/25f03c76b22d310fd87013a310847566.jpg',
+    videoUrl: 'https://github.com/user-attachments/assets/b0a107d1-db93-42cb-afd2-f733e5ef4ada',
     voiceoverScript: {
       id: 'Selamat datang di Pulau Kemaro, tempat legenda cinta yang sangat indah.',
       en: 'Welcome to Kemaro Island, the place of a beautiful love legend.',
@@ -110,8 +110,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'Pempek was originally called "Kelesan" before it became famous as Pempek!',
       plm: 'Dulu nian pempek tu namonyo Kelesan, baru laju dipanggil Pempek pas lamo-lamo.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://www.dapurkintamani.com/wp-content/uploads/2020/11/pempek-palembang.webp',
+    videoUrl: 'https://github.com/user-attachments/assets/81322cbe-2e23-43db-8e57-0fade81bf425',
     voiceoverScript: {
       id: 'Halo Adik-adik! Ini adalah Pempek, makanan paling terkenal dari Palembang.',
       en: 'Hello kids! This is Pempek, the most famous food from Palembang.',
@@ -135,8 +135,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'The name "Srivijaya" comes from Sanskrit, meaning "Glorious Victory".',
       plm: 'Sriwijaya tu artinyo menang yang mantap nian, dari bahasa Sansekerta.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1605649424824-479304443913?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://www.madachicago.com/wp-content/uploads/2026/02/sejarah-kerajaan-sriwijaya.png',
+    videoUrl: 'https://github.com/user-attachments/assets/e87f7310-a67e-49fd-95c1-9d2be2dbc0a3',
     voiceoverScript: { id: 'Dahulu kala, Palembang adalah pusat Kerajaan Sriwijaya.', en: 'Long ago, Palembang was the center of Srivijaya.', plm: 'Dulu nian, Palembang iko pusat maritim.' },
     quiz: [
       { question: 'Sriwijaya adalah kerajaan?', options: ['Gurun', 'Maritim/Laut', 'Hutan', 'Pegunungan'], correctIndex: 1 },
@@ -156,8 +156,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'This is the largest wood-carved Quran in the world, standing at 15 meters high!',
       plm: 'Quran iko paling besak di dunio yang dari kayu, tingginyo 15 meter.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://img.inews.co.id/media/1200/files/inews_new/2023/02/06/al_quran_terbesar.jpg',
+    videoUrl: 'https://github.com/user-attachments/assets/d10a8618-83c7-42e7-a75a-6c064a6746c3',
     voiceoverScript: { id: 'Indah sekali ukiran ayat suci ini.', en: 'These holy carvings are so beautiful.', plm: 'Subhanallah, besak nian ayat-ayat Quran iko.' },
     quiz: [
       { question: 'Terbuat dari bahan apa Quran ini?', options: ['Batu', 'Kayu', 'Besi', 'Plastik'], correctIndex: 1 },
@@ -181,8 +181,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'Palembang is one of the oldest cities in Indonesia!',
       plm: 'Palembang iko salah satu koto paling tuo di Indonesia!'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://images.tokopedia.net/blog-tokopedia-com/uploads/2018/08/fakta-palembang-1-Wikipedia.jpg',
+    videoUrl: 'https://github.com/user-attachments/assets/a92d30ee-d68f-41e6-b1b7-a6f325f565a5',
     voiceoverScript: {
       id: 'Ayo dengarkan cerita seru tentang sejarah kota kita!',
       en: 'Let\'s listen to an exciting story about our city\'s history!',
@@ -210,8 +210,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'Limas House was once featured on the ten thousand rupiah banknote!',
       plm: 'Rumah Limas iko pernah ado di duet sepuluh ribu, tau dak kau?'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://www.indonesia.travel/contentassets/a7674ddd39a44f52a3c7c74651a3e411/rumah-limas.jpeg',
+    videoUrl: 'https://github.com/user-attachments/assets/3c6a6d5f-5b1c-44fa-b1f5-3bec0e54aa90',
     voiceoverScript: {
       id: 'Ini adalah Rumah Limas, tempat tinggal bangsawan Palembang zaman dahulu.',
       en: 'This is Limas House, where Palembang nobles used to live long ago.',
@@ -239,8 +239,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'One piece of Songket can take months to weave because it is so difficult!',
       plm: 'Nenun Songket iko lamo nian, pacak berbulan-bulan baru jadi sebuting.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1574531200171-89309c0631c1?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://tenunansongket.com/wp-content/uploads/2023/04/WhatsApp-Image-2023-05-11-at-22.56.06-e1683820625222.jpg',
+    videoUrl: 'https://github.com/user-attachments/assets/fb897e75-c168-4301-af3f-ec4f13e168bf',
     voiceoverScript: {
       id: 'Wah, lihatlah kilauan emas pada kain Songket yang indah ini!',
       en: 'Wow, look at the golden sparkle on this beautiful Songket fabric!',
@@ -268,8 +268,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'The name "Tanggai" is taken from the long-nail accessory worn by the dancers!',
       plm: 'Namonyo Tari Tanggai karno penarinyo pake Tanggai, kuku panjang yang mengkilap.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1620211110006-21a41764667d?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://i0.wp.com/www.infobudaya.net/wp-content/uploads/2019/02/083.jpg?fit=700%2C466&ssl=1',
+    videoUrl: 'https://github.com/user-attachments/assets/ca798198-9db1-48c7-a03d-6e8b21ba133f',
     voiceoverScript: {
       id: 'Ayo belajar menari Tanggai untuk menyambut tamu spesial kita!',
       en: 'Let\'s learn the Tanggai dance to welcome our special guests!',
@@ -297,8 +297,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'Now Belido fish is very rare, so we must keep our river clean!',
       plm: 'Iwak Belido iko sekarang lah dikit nian, mangkonyo kito jangan buang sampah di sungai.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1524704654690-b56c05c78a00?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://palpos.disway.id/upload/9797f59a89158a7af233c8fbc4861994.jpg',
+    videoUrl: 'https://github.com/user-attachments/assets/7b52d54f-6afb-4851-af2f-106b233849f0',
     voiceoverScript: {
       id: 'Halo! Kenalkan, ini Ikan Belido, si ikan hebat penghuni Sungai Musi.',
       en: 'Hello! Meet Belido Fish, the amazing resident of the Musi River.',
@@ -327,7 +327,7 @@ export const CULTURE_DATA: CultureItem[] = [
       plm: 'Mie Celor iko biasonyo dimakan pas sarapan biar semangat belajau.'
     },
     imageUrl: 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    videoUrl: 'https://github.com/user-attachments/assets/3d4c8cf8-492d-4e41-bd5f-c10328f26aa8',
     voiceoverScript: {
       id: 'Ayo sarapan Mie Celor! Kuahnya kental dan penuh rasa udang.',
       en: 'Let\'s have Mie Celor for breakfast! The broth is thick and full of shrimp flavor.',
@@ -384,8 +384,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'One Bidar boat can hold up to 50 rowers working together!',
       plm: 'Sebuting perahu Bidar iko pacak dimuat 50 wong yang kompak ngayun dayung.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1540560416410-d02316e2978d?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://radarmukomuko.disway.id/upload/093ae9ad2670536202a5e2fa99d24983.jpg',
+    videoUrl: 'https://github.com/user-attachments/assets/7e72e774-4a36-4db0-8183-ac3ebc001342',
     voiceoverScript: {
       id: 'Ayo semangat! Perahu Bidar meluncur cepat di atas air Sungai Musi.',
       en: 'Go go go! The Bidar boat glides fast over the Musi River water.',
@@ -413,8 +413,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'Kemplang Tunu is cooked by grilling over hot coals, not deep-fried!',
       plm: 'Kemplang Tunu tu dipanggang di pucuk baro api, mangkonyo rasonyo beda.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1610450518356-9b0d66c1b351?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://cdns.klimg.com/merdeka.com/i/w/news/2020/11/20/1244821/content_images/670x335/20201120144436-1-ilustrasi-kemplang-bakar-001-tantri-setyorini-vmdkimg20143916.jpg',
+    videoUrl: 'https://github.com/user-attachments/assets/27e9c97e-07a5-4482-9848-b064ddb4f817',
     voiceoverScript: {
       id: 'Kriuk! Makan Kemplang paling enak pakai sambal terasi pedas.',
       en: 'Crunch! Kemplang tastes best when eaten with spicy chili sauce.',
@@ -442,8 +442,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'HAR stands for the name of its owner, Haji Abdul Rozak!',
       plm: 'HAR tu singkatan namo wong yang punyo, Haji Abdul Rozak!'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1616012431267-33671236894d?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://monolooghotels.com/images/blog/okt/6.jpg',
+    videoUrl: 'https://github.com/user-attachments/assets/dfd39f83-5316-4174-b08f-afcd78c9d928',
     voiceoverScript: {
       id: 'Hmm, harumnya kuah kari Martabak HAR ini bikin lapar!',
       en: 'Hmm, the aroma of this HAR Martabak curry makes me hungry!',
@@ -471,8 +471,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'Many houses here are over 200 years old but still standing strong!',
       plm: 'Rumah disiko lah ado yang 200 tahun umurnyo, tapi masih mantap.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1596422846543-75c6fc18a594?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://zjglidcehtsqqqhbdxyp.supabase.co/storage/v1/object/public/atourin/images/destination/palembang/kampung-wisata-al-munawar-profile1646199688.png?x-image-process=image/resize,p_100,limit_1/imageslim',
+    videoUrl: 'https://github.com/user-attachments/assets/c2e9d8a1-b48e-4f97-9c3d-05a5d14be061',
     voiceoverScript: {
       id: 'Ayo berkeliling Kampung Arab dan melihat rumah kuno yang indah!',
       en: 'Let\'s walk around the Arabic Village and see the beautiful ancient houses!',
@@ -500,8 +500,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'The fresh sour taste usually comes from pineapple slices!',
       plm: 'Raso asem segernyo iko karno dikasih nanas, tau dak kau?'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1548946522-4ad31345c0f1?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://blog.tokowahab.com/wp-content/uploads/2020/06/Resep-Pindang-Ikan-Patin-Khas-Palembang.jpg',
+    videoUrl: 'https://github.com/user-attachments/assets/c698ebaa-c7a8-4b6b-b046-a514e3a532dc',
     voiceoverScript: {
       id: 'Segar sekali rasa kuah Pindang Patin ini. Pakai nasi hangat ya!',
       en: 'This Pindang Patin soup is so fresh. Eat it with warm rice!',
@@ -520,17 +520,17 @@ export const CULTURE_DATA: CultureItem[] = [
     title: { id: 'Batik Palembang', en: 'Palembang Batik', plm: 'Batik Palembang' },
     pronunciation: { id: 'Ba-tik', en: 'Bah-teek', plm: 'Ba-tek' },
     description: {
-      id: 'Kain batik khas Palembang dengan motif yang terinspirasi dari alam dan bunga.',
-      en: 'Palembang traditional batik with motifs inspired by nature and flowers.',
-      plm: 'Batik asli Palembang, motifnyo bunga-bunga and warno-warni.'
+      id: 'Kain batik khas Palembang dengan motif yang terinspirasi dari alam dan bunga. Biasa disebut Kain Jumputan.',
+      en: 'Palembang traditional batik with motifs inspired by nature and flowers. Often called Jumputan',
+      plm: 'Batik asli Palembang, motifnyo bunga-bunga and warno-warni. Biaso disebut Kain Jumputan.'
     },
     funFact: {
       id: 'Batik Palembang sering menggunakan warna-warna cerah seperti merah dan kuning!',
       en: 'Palembang Batik often uses bright colors like red and yellow!',
       plm: 'Batik kito ni biasonyo warno abang samo kuning, cerah nian.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1574531200171-89309c0631c1?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://perdagangan.palembang.go.id/uploads/k0cm106mmdahaxy_55c20fd7c8.jpeg',
+    videoUrl: 'https://github.com/user-attachments/assets/8f153542-ddad-4c7f-af14-aa17cb5c795c',
     voiceoverScript: {
       id: 'Indah sekali ya motif bunga pada Batik Palembang ini!',
       en: 'How beautiful are the flower motifs on this Palembang Batik!',
@@ -558,8 +558,8 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'Although the broth is red, Laksan is usually not too spicy for kids!',
       plm: 'Walo kuahnyo abang, tapi dak pedes nian, pas buat kito makan.'
     },
-    imageUrl: 'https://images.unsplash.com/photo-1599481238640-4c1288750d7a?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    imageUrl: 'https://i.ytimg.com/vi/Un3o2XqgfH0/maxresdefault.jpg',
+    videoUrl: 'https://github.com/user-attachments/assets/84c35035-078e-4b9c-ab8a-bf8368c89099',
     voiceoverScript: {
       id: 'Laksan adalah sarapan favorit di Palembang. Kuahnya gurih sekali!',
       en: 'Laksan is a favorite breakfast in Palembang. The broth is so savory!',
