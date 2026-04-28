@@ -13,15 +13,21 @@ const StoryMode: React.FC<{ lang: Language, onClose: () => void }> = ({ lang, on
 
   const loadSegment = async (promptText: string) => {
     setLoading(true);
-    const data = await aiService.getStorySegment(promptText, lang);
-    setSegment(data);
-    
-    // Generate fresh visual for each segment
-    const img = await aiService.generateClayImage(data.visualPrompt);
-    setVisualUrl(img);
-    
-    setLoading(false);
-    audioService.speak(data.text, 'Zephyr');
+    try {
+      const data = await aiService.getStorySegment(promptText, lang);
+      setSegment(data);
+      audioService.speak(data.text, 'Zephyr');
+      
+      // Load image in background
+      aiService.generateClayImage(data.visualPrompt).then(img => {
+        setVisualUrl(img);
+        setLoading(false);
+      }).catch(() => setLoading(false));
+
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

@@ -33,18 +33,23 @@ const MusiRace: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const now = Date.now();
     const diff = now - lastTapRef.current;
     
-    if (diff < 600 && diff > 300) {
-      // SUCCESSFUL RHYTHMIC TAP
+    if (diff < 800 && diff > 150) {
+      // SUCCESSFUL TAP
       if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
-      setCombo(c => c + 1);
-      setSpeed(s => Math.min(20, s + 3 + (combo * 0.2)));
-      setShowTap(true);
-      setTimeout(() => setShowTap(false), 200);
+      
+      // Only increment combo if rhythmic (300ms-700ms)
+      if (diff < 700 && diff > 300) {
+        setCombo(c => Math.min(50, c + 1));
+        setShowTap(true);
+        setTimeout(() => setShowTap(false), 300);
+      }
+      
+      setSpeed(s => Math.min(30, s + 4 + (combo * 0.4)));
     } else {
-      // STANDARD TAP
+      // TOO FAST OR TOO SLOW TAP
       if (navigator.vibrate) navigator.vibrate(20);
-      setCombo(0);
-      setSpeed(s => Math.min(20, s + 2));
+      // We don't reset combo here anymore, letting the sailboat's speed handle the reset
+      setSpeed(s => Math.min(25, s + 1.5));
     }
     lastTapRef.current = now;
   };
@@ -97,8 +102,10 @@ const MusiRace: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         <button 
           onClick={handlePaddle}
-          className="w-64 h-64 rounded-full bg-orange-500 border-[12px] border-white shadow-[0_20px_0_rgb(194,65,12)] active:translate-y-4 active:shadow-none transition-all flex flex-col items-center justify-center group"
+          className="w-64 h-64 rounded-full bg-orange-500 border-[12px] border-white shadow-[0_20px_0_rgb(194,65,12)] active:translate-y-4 active:shadow-none transition-all flex flex-col items-center justify-center group relative"
         >
+          {/* Rhythm Pulse Ring */}
+          <div className="absolute inset-0 rounded-full border-4 border-white/40 animate-ping pointer-events-none" style={{ animationDuration: '0.6s' }} />
           <span className="text-7xl group-active:scale-90 transition">🚣‍♂️</span>
           <span className="text-white font-black text-3xl mt-2">TAP!</span>
         </button>

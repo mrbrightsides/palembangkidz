@@ -95,11 +95,39 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             }
             if (msg.serverContent?.outputTranscription) {
               const text = msg.serverContent.outputTranscription.text;
-              setTranscription(prev => [...prev, `Zephyr: ${text}`]);
-              setLatestZephyrMsg(text);
+              setTranscription(prev => {
+                const lastIdx = prev.length - 1;
+                if (lastIdx >= 0 && prev[lastIdx].startsWith('Zephyr: ')) {
+                  const updatedLine = prev[lastIdx].endsWith(' ') || text.startsWith(' ') 
+                    ? prev[lastIdx] + text 
+                    : prev[lastIdx] + ' ' + text;
+                  const newArr = [...prev];
+                  newArr[lastIdx] = updatedLine;
+                  return newArr;
+                }
+                return [...prev, `Zephyr: ${text}`];
+              });
+              setLatestZephyrMsg(prev => {
+                if (!prev) return text;
+                return prev.endsWith(' ') || text.startsWith(' ') ? prev + text : prev + ' ' + text;
+              });
             }
             if (msg.serverContent?.inputTranscription) {
-              setTranscription(prev => [...prev, `You: ${msg.serverContent!.inputTranscription!.text}`]);
+              const text = msg.serverContent!.inputTranscription!.text;
+              setTranscription(prev => {
+                const lastIdx = prev.length - 1;
+                if (lastIdx >= 0 && prev[lastIdx].startsWith('You: ')) {
+                  const updatedLine = prev[lastIdx].endsWith(' ') || text.startsWith(' ') 
+                    ? prev[lastIdx] + text 
+                    : prev[lastIdx] + ' ' + text;
+                  const newArr = [...prev];
+                  newArr[lastIdx] = updatedLine;
+                  return newArr;
+                }
+                return [...prev, `You: ${text}`];
+              });
+              // Clear Zephyr's head bubble when user starts talking
+              setLatestZephyrMsg(null);
             }
           },
           onclose: () => setIsActive(false),
@@ -145,9 +173,14 @@ const LiveTeacher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         <div ref={scrollRef} className="flex-1 bg-black/40 rounded-[3rem] p-8 overflow-y-auto space-y-4 border-4 border-white/5 scroll-smooth shadow-inner">
           {transcription.length === 0 && !isConnecting && (
-            <div className="h-full flex flex-col items-center justify-center text-sky-200/40 text-center space-y-4">
-              <span className="text-6xl">🎙️</span>
-              <p className="text-xl font-bold">Press Start to talk to Sage Zephyr!</p>
+            <div className="h-full flex flex-col items-center justify-center text-sky-200/40 text-center space-y-6">
+              <div className="w-24 h-24 bg-sky-500/20 rounded-full flex items-center justify-center animate-pulse">
+                <span className="text-6xl">🎙️</span>
+              </div>
+              <div className="space-y-2">
+                <p className="text-2xl font-black text-white">Sage Zephyr is waiting!</p>
+                <p className="text-lg font-bold text-sky-300/60 max-w-sm">Tap Start, allow your microphone, and say "Hello" to begin our magical journey!</p>
+              </div>
             </div>
           )}
           {isConnecting && (

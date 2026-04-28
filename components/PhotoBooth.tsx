@@ -135,6 +135,11 @@ const PhotoBooth: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         {/* Viewport */}
         <div className="flex-1 bg-black relative flex items-center justify-center">
+          {/* Instruction Bar */}
+          <div className="absolute top-0 left-0 right-0 z-[60] bg-emerald-500 text-white py-2 text-center font-black text-xs uppercase tracking-widest shadow-lg">
+            {!photo ? "Step 1: Strike a pose & tap the button! 📸" : "Step 2: Add props & Save! ✨"}
+          </div>
+
           {!photo ? (
             <div className="relative w-full h-full">
               <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover mirror scale-x-[-1]" />

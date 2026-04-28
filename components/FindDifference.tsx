@@ -51,7 +51,15 @@ const FindDifference: React.FC<{ lang: Language, onClose: () => void }> = ({ lan
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-    const threshold = 8; // Detection radius
+    // Create temporary tap ripple
+    const ripple = document.createElement('div');
+    ripple.className = 'absolute w-12 h-12 border-4 border-white/50 rounded-full animate-ping pointer-events-none transform -translate-x-1/2 -translate-y-1/2 shadow-xl';
+    ripple.style.left = `${x}%`;
+    ripple.style.top = `${y}%`;
+    e.currentTarget.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+
+    const threshold = 12; // Radius
     const foundIdx = differences.findIndex(d => 
       !d.found && 
       Math.abs(d.x - x) < threshold && 

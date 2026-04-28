@@ -184,17 +184,17 @@ const Scrapbook: React.FC<Props> = ({
                        <span className="text-xl">⭐</span>
                      </div>
                    )}
-
-                   <button
-                    onClick={(e) => { e.stopPropagation(); removeSticker(sticker.id); }}
-                    className="absolute -top-2 -left-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover/sticker:opacity-100 transition-opacity shadow-lg"
-                   >
-                     ✕
-                   </button>
                 </div>
 
+                <button
+                  onClick={(e) => { e.stopPropagation(); removeSticker(sticker.id); }}
+                  className="absolute -top-4 -left-4 w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center text-lg z-50 opacity-0 group-hover/sticker:opacity-100 transition-opacity shadow-xl border-4 border-white"
+                >
+                  ✕
+                </button>
+
                 <div 
-                  className="absolute inset-0"
+                  className="absolute inset-0 z-30"
                   onMouseDown={(e) => {
                     const startX = e.clientX;
                     const startY = e.clientY;
