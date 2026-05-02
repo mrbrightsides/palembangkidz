@@ -188,7 +188,9 @@ const Scrapbook: React.FC<Props> = ({
 
                 <button
                   onClick={(e) => { e.stopPropagation(); removeSticker(sticker.id); }}
-                  className="absolute -top-4 -left-4 w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center text-lg z-50 opacity-0 group-hover/sticker:opacity-100 transition-opacity shadow-xl border-4 border-white"
+                  className={`absolute -top-4 -left-4 w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center text-2xl z-[60] transition-all shadow-xl border-4 border-white ${
+                    activeStickerId === sticker.id ? 'opacity-100 scale-100' : 'opacity-0 scale-50 group-hover/sticker:opacity-100 group-hover/sticker:scale-100'
+                  }`}
                 >
                   ✕
                 </button>

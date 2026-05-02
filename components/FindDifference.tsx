@@ -10,6 +10,7 @@ const FindDifference: React.FC<{ lang: Language, onClose: () => void }> = ({ lan
   const [images, setImages] = useState<{ base: string, modified: string } | null>(null);
   const [differences, setDifferences] = useState<Difference[]>([]);
   const [score, setScore] = useState(0);
+  const [mistakes, setMistakes] = useState(0);
   const [timer, setTimer] = useState(60);
   const [isFinished, setIsFinished] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -59,7 +60,7 @@ const FindDifference: React.FC<{ lang: Language, onClose: () => void }> = ({ lan
     e.currentTarget.appendChild(ripple);
     setTimeout(() => ripple.remove(), 600);
 
-    const threshold = 12; // Radius
+    const threshold = 15; // Increased radius for easier tapping
     const foundIdx = differences.findIndex(d => 
       !d.found && 
       Math.abs(d.x - x) < threshold && 
@@ -70,7 +71,7 @@ const FindDifference: React.FC<{ lang: Language, onClose: () => void }> = ({ lan
       const newDiffs = [...differences];
       newDiffs[foundIdx].found = true;
       setDifferences(newDiffs);
-      setScore(s => s + 100 + timer);
+      setScore(s => s + 100);
       audioService.playEffect('success');
       if (navigator.vibrate) navigator.vibrate([10, 50, 10]);
 
@@ -78,8 +79,19 @@ const FindDifference: React.FC<{ lang: Language, onClose: () => void }> = ({ lan
         setIsFinished(true);
       }
     } else {
+      // Miss indicator (Red X)
+      const miss = document.createElement('div');
+      miss.className = 'absolute w-12 h-12 flex items-center justify-center text-red-500 font-black text-4xl pointer-events-none transform -translate-x-1/2 -translate-y-1/2 select-none z-50';
+      miss.innerHTML = '✕';
+      miss.style.left = `${x}%`;
+      miss.style.top = `${y}%`;
+      e.currentTarget.appendChild(miss);
+      setTimeout(() => miss.remove(), 600);
+
       if (navigator.vibrate) navigator.vibrate(50);
       audioService.playEffect('whoosh');
+      setMistakes(m => m + 1);
+      setScore(s => Math.max(0, s - 10));
     }
   };
 
@@ -98,13 +110,18 @@ const FindDifference: React.FC<{ lang: Language, onClose: () => void }> = ({ lan
         <div className="flex justify-between items-center bg-white/10 backdrop-blur rounded-[2.5rem] p-6 border-4 border-white/10 shadow-2xl">
           <div className="flex items-center gap-6">
             <div className="text-center">
-              <p className="text-cyan-400 font-black text-xs uppercase tracking-widest">Found</p>
+              <p className="text-green-400 font-black text-xs uppercase tracking-widest">Correct</p>
               <p className="text-3xl font-black text-white">{differences.filter(d => d.found).length} / {differences.length}</p>
             </div>
             <div className="w-px h-10 bg-white/20" />
             <div className="text-center">
               <p className="text-cyan-400 font-black text-xs uppercase tracking-widest">Time</p>
               <p className={`text-3xl font-black ${timer < 10 ? 'text-red-400 animate-pulse' : 'text-white'}`}>{timer}s</p>
+            </div>
+            <div className="w-px h-10 bg-white/20" />
+            <div className="text-center">
+              <p className="text-red-400 font-black text-xs uppercase tracking-widest">Mistakes</p>
+              <p className="text-3xl font-black text-white">{mistakes}</p>
             </div>
           </div>
           <h2 className="text-2xl font-black text-white tracking-tighter hidden md:block">Find the Differences! 🧩</h2>
@@ -121,13 +138,17 @@ const FindDifference: React.FC<{ lang: Language, onClose: () => void }> = ({ lan
           <div onClick={(e) => handleTap(e, 'base')} className="relative aspect-square md:aspect-auto bg-white rounded-[3rem] overflow-hidden border-8 border-white shadow-2xl cursor-crosshair">
             <img src={images?.base} className="w-full h-full object-cover select-none" alt="Original" />
             {differences.filter(d => d.found).map(d => (
-              <div key={d.id} className="absolute w-12 h-12 border-4 border-green-500 rounded-full animate-ping pointer-events-none" style={{ left: `${d.x}%`, top: `${d.y}%`, transform: 'translate(-50%, -50%)' }} />
+              <div key={d.id} className="absolute w-12 h-12 border-4 border-green-500 bg-green-500/20 rounded-full flex items-center justify-center shadow-lg pointer-events-none z-40 transform -translate-x-1/2 -translate-y-1/2" style={{ left: `${d.x}%`, top: `${d.y}%` }}>
+                <span className="text-green-600 text-xl font-black">✓</span>
+              </div>
             ))}
           </div>
           <div onClick={(e) => handleTap(e, 'modified')} className="relative aspect-square md:aspect-auto bg-white rounded-[3rem] overflow-hidden border-8 border-white shadow-2xl cursor-crosshair">
             <img src={images?.modified} className="w-full h-full object-cover select-none" alt="Modified" />
             {differences.filter(d => d.found).map(d => (
-              <div key={d.id} className="absolute w-12 h-12 border-4 border-green-500 rounded-full animate-ping pointer-events-none" style={{ left: `${d.x}%`, top: `${d.y}%`, transform: 'translate(-50%, -50%)' }} />
+              <div key={d.id} className="absolute w-12 h-12 border-4 border-green-500 bg-green-500/20 rounded-full flex items-center justify-center shadow-lg pointer-events-none z-40 transform -translate-x-1/2 -translate-y-1/2" style={{ left: `${d.x}%`, top: `${d.y}%` }}>
+                <span className="text-green-600 text-xl font-black">✓</span>
+              </div>
             ))}
           </div>
         </div>

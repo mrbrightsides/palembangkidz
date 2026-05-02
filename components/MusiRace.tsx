@@ -2,13 +2,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const MusiRace: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const [level, setLevel] = useState(1);
   const [distance, setDistance] = useState(0);
   const [speed, setSpeed] = useState(0);
   const [combo, setCombo] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [showTap, setShowTap] = useState(false);
   const lastTapRef = useRef<number>(0);
-  const targetDistance = 1000;
+  const targetDistance = 500 + (level * 500);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -21,11 +22,14 @@ const MusiRace: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         }
         return next;
       });
-      setSpeed(prev => Math.max(0, prev - 0.1));
-      if (speed <= 0) setCombo(0);
+      // Friction: Boat slows down over time
+      setSpeed(prev => Math.max(0, prev - (0.05 + (level * 0.02))));
+      
+      // Reset combo if speed drops too low
+      if (speed < 0.5) setCombo(0);
     }, 50);
     return () => clearInterval(timer);
-  }, [speed]);
+  }, [speed, level, targetDistance]);
 
   const handlePaddle = () => {
     if (isFinished) return;
@@ -33,30 +37,54 @@ const MusiRace: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const now = Date.now();
     const diff = now - lastTapRef.current;
     
-    if (diff < 800 && diff > 150) {
-      // SUCCESSFUL TAP
+    // Rhythm Detection (250ms to 650ms is the sweet spot)
+    const isPerfect = diff < 650 && diff > 250;
+    const isTooFast = diff < 250;
+
+    if (isTooFast) {
+      // Penalty for spamming
+      setCombo(0);
+      setSpeed(s => Math.max(0, s - 2));
+      if (navigator.vibrate) navigator.vibrate(100);
+      return;
+    }
+
+    if (isPerfect) {
+      // SUCCESSFUL RHYTHMIC TAP
       if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
+      setCombo(c => Math.min(100, c + 1));
+      setShowTap(true);
+      setTimeout(() => setShowTap(false), 200);
       
-      // Only increment combo if rhythmic (300ms-700ms)
-      if (diff < 700 && diff > 300) {
-        setCombo(c => Math.min(50, c + 1));
-        setShowTap(true);
-        setTimeout(() => setShowTap(false), 300);
-      }
-      
-      setSpeed(s => Math.min(30, s + 4 + (combo * 0.4)));
+      // Speed boost scales with combo
+      const comboBonus = combo * 0.5;
+      setSpeed(s => Math.min(40 + level * 5, s + 5 + comboBonus));
     } else {
-      // TOO FAST OR TOO SLOW TAP
+      // STANDARD TAP (Out of rhythm)
       if (navigator.vibrate) navigator.vibrate(20);
-      // We don't reset combo here anymore, letting the sailboat's speed handle the reset
-      setSpeed(s => Math.min(25, s + 1.5));
+      setCombo(0);
+      setSpeed(s => Math.min(25, s + 2));
     }
     lastTapRef.current = now;
   };
 
+  const nextLevel = () => {
+    setLevel(l => l + 1);
+    setDistance(0);
+    setSpeed(0);
+    setCombo(0);
+    setIsFinished(false);
+  };
+
   return (
     <div className="fixed inset-0 z-[300] bg-sky-400 flex flex-col items-center justify-center p-6 overflow-hidden">
-      <button onClick={onClose} className="absolute top-10 right-10 z-50 w-16 h-16 bg-white/20 rounded-full text-white text-3xl font-black">✕</button>
+      <button onClick={onClose} className="absolute top-10 right-10 z-50 w-16 h-16 bg-white/20 rounded-full text-white text-3xl font-black hover:bg-red-500 transition-colors">✕</button>
+      
+      {/* Level Badge */}
+      <div className="absolute top-10 left-10 bg-white/90 px-8 py-4 rounded-[2rem] shadow-xl border-4 border-sky-600">
+        <p className="text-sky-600 font-black text-sm uppercase">Race Level</p>
+        <p className="text-3xl font-black text-sky-900">{level}</p>
+      </div>
       
       {/* Game Track */}
       <div className="w-full h-80 relative bg-sky-300 rounded-[4rem] border-8 border-white/30 shadow-2xl overflow-hidden mb-12">
@@ -74,8 +102,15 @@ const MusiRace: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <div className="relative">
             <span className="text-6xl">🛶</span>
             <div className={`absolute -right-4 top-0 transition-opacity ${speed > 5 ? 'opacity-100' : 'opacity-0'}`}>
-              <span className="text-3xl animate-pulse">💨</span>
+              <span className={`text-3xl animate-pulse ${combo > 5 ? 'text-orange-500' : ''}`}>
+                {combo > 10 ? '⚡️⚡️' : '💨'}
+              </span>
             </div>
+            {combo > 0 && (
+              <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-white text-sky-900 px-3 py-1 rounded-full text-xs font-black shadow-lg animate-bounce border-2 border-sky-400">
+                x{combo}
+              </div>
+            )}
           </div>
         </div>
 
@@ -111,13 +146,32 @@ const MusiRace: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </button>
         
         <p className="text-white font-black text-xl animate-pulse">Rhythmically tap to row faster!</p>
+        <p className="text-sky-100/60 text-sm font-bold">(Don't tap too fast or you'll lose your combo!)</p>
       </div>
 
       {isFinished && (
-        <div className="absolute inset-0 z-50 bg-yellow-400 flex flex-col items-center justify-center p-12 text-center fade-in">
-          <h2 className="text-8xl font-black text-white drop-shadow-xl mb-6">WINNER! 🏆</h2>
-          <p className="text-4xl font-black text-orange-900 mb-12">You crossed the Musi in record time!</p>
-          <button onClick={onClose} className="bg-white text-orange-500 px-16 py-8 rounded-[3rem] text-4xl font-black shadow-2xl hover:scale-110 transition">Back to City</button>
+        <div className="absolute inset-0 z-50 bg-yellow-400 flex flex-col items-center justify-center p-12 text-center fade-in backdrop-blur-xl">
+          <div className="bg-white p-12 rounded-[4rem] shadow-2xl border-[12px] border-yellow-500 max-w-2xl w-full">
+            <h2 className="text-8xl font-black text-yellow-500 drop-shadow-xl mb-4">GOAL! 🏁</h2>
+            <p className="text-4xl font-black text-sky-900 mb-2">Race #{level} Complete!</p>
+            <p className="text-xl font-bold text-sky-700/60 mb-12">You're becoming a Musi River Legend!</p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <button 
+                onClick={nextLevel} 
+                className="bg-sky-500 text-white px-12 py-6 rounded-[2.5rem] text-3xl font-black shadow-[0_10px_0_rgb(14,165,233)] hover:-translate-y-1 active:translate-y-1 active:shadow-none transition-all flex items-center gap-4"
+              >
+                <span>Next Race</span>
+                <span className="text-2xl">➡</span>
+              </button>
+              <button 
+                onClick={onClose} 
+                className="bg-white text-sky-900 px-12 py-6 rounded-[2.5rem] text-3xl font-black shadow-[0_10px_0_rgb(203,213,225)] hover:-translate-y-1 active:translate-y-1 active:shadow-none transition-all"
+              >
+                Back Home
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
