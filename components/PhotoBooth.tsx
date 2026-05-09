@@ -9,6 +9,7 @@ const PhotoBooth: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [photo, setPhoto] = useState<string | null>(null);
   const [stickers, setStickers] = useState<ScrapbookSticker[]>([]);
   const [activeStickerId, setActiveStickerId] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -67,37 +68,76 @@ const PhotoBooth: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     audioService.playEffect('whoosh');
   };
 
-  const saveMasterpiece = () => {
-    if (canvasRef.current && photo) {
-      const finalCanvas = document.createElement('canvas');
-      finalCanvas.width = canvasRef.current.width;
-      finalCanvas.height = canvasRef.current.height;
-      const ctx = finalCanvas.getContext('2d');
-      if (!ctx) return;
+  const saveMasterpiece = async () => {
+    if (!photo || !canvasRef.current || isSaving) return;
+    setIsSaving(true);
 
+    const finalCanvas = document.createElement('canvas');
+    finalCanvas.width = canvasRef.current.width;
+    finalCanvas.height = canvasRef.current.height;
+    const ctx = finalCanvas.getContext('2d');
+    if (!ctx) return;
+
+    // Helper to load images
+    const loadImage = (src: string) => new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new Image();
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0);
-        // Draw stickers
-        stickers.forEach(s => {
-          const sImg = new Image();
-          sImg.src = CULTURE_DATA.find(item => item.id === s.itemId)!.imageUrl;
-          const x = (s.posX / 100) * finalCanvas.width;
-          const y = (s.posY / 100) * finalCanvas.height;
-          const size = 150 * s.scale;
-          ctx.save();
-          ctx.translate(x, y);
-          ctx.rotate((s.rotation * Math.PI) / 180);
-          ctx.drawImage(sImg, -size/2, -size/2, size, size);
-          ctx.restore();
-        });
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+
+    try {
+      // Load base photo
+      const baseImg = await loadImage(photo);
+      ctx.drawImage(baseImg, 0, 0);
+
+      // Load and draw all stickers
+      for (const s of stickers) {
+        const item = CULTURE_DATA.find(i => i.id === s.itemId);
+        if (!item) continue;
         
-        const link = document.createElement('a');
-        link.download = 'palembang-selfie.png';
-        link.href = finalCanvas.toDataURL();
-        link.click();
-      };
-      img.src = photo;
+        const sImg = await loadImage(item.imageUrl);
+        const x = (s.posX / 100) * finalCanvas.width;
+        const y = (s.posY / 100) * finalCanvas.height;
+        const size = 200 * s.scale; // Increased base sticker size in capture
+        
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate((s.rotation * Math.PI) / 180);
+        ctx.drawImage(sImg, -size / 2, -size / 2, size, size);
+        ctx.restore();
+      }
+
+      const dataUrl = finalCanvas.toDataURL('image/png');
+
+      // Try Web Share first
+      if (navigator.share) {
+        try {
+          const blob = await (await fetch(dataUrl)).blob();
+          const file = new File([blob], 'palembang-selfie.png', { type: 'image/png' });
+          await navigator.share({
+            files: [file],
+            title: 'My Palembang Selfie! 🤳',
+            text: 'Check out my cool photo from PalembangKidz! ✨'
+          });
+          return;
+        } catch (err) {
+          console.log('Sharing failed, falling back to download', err);
+        }
+      }
+
+      // Fallback to download
+      const link = document.createElement('a');
+      link.download = 'palembang-selfie.png';
+      link.href = dataUrl;
+      link.click();
+      audioService.playEffect('success');
+    } catch (error) {
+      console.error('Error saving photo:', error);
+      alert('Oh no! Something went wrong saving your photo. Try again! 💫');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -191,8 +231,17 @@ const PhotoBooth: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               ))}
               
               <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-6">
-                <button onClick={() => { setPhoto(null); setStickers([]); startCamera(); }} className="bg-white/90 px-8 py-4 rounded-full font-black text-emerald-900 shadow-xl hover:bg-white transition active:scale-95">Retake 📸</button>
-                <button onClick={saveMasterpiece} className="bg-emerald-500 px-10 py-4 rounded-full font-black text-white shadow-xl hover:bg-emerald-600 transition active:scale-95">Save & Share ✨</button>
+                <button onClick={() => { setPhoto(null); setStickers([]); startCamera(); }} disabled={isSaving} className="bg-white/90 px-8 py-4 rounded-full font-black text-emerald-900 shadow-xl hover:bg-white transition active:scale-95 disabled:opacity-50">Retake 📸</button>
+                <button onClick={saveMasterpiece} disabled={isSaving} className="bg-emerald-500 px-10 py-4 rounded-full font-black text-white shadow-xl hover:bg-emerald-600 transition active:scale-95 disabled:opacity-50 flex items-center gap-3">
+                  {isSaving ? (
+                    <>
+                      <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <span>Save & Share ✨</span>
+                  )}
+                </button>
               </div>
             </div>
           )}
