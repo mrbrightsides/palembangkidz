@@ -6,17 +6,17 @@ const LoadingScreen: React.FC = () => {
   return (
     <div className="fixed inset-0 z-[100] bg-sky-100 flex flex-col items-center justify-center p-6">
       <div className="w-64 h-64 md:w-96 md:h-96">
-        {/* A whimsical bouncing/floating animation */}
+        {/* Kid-friendly adventure/explorer animation */}
         <LottiePlayer 
-          url="https://assets2.lottiefiles.com/packages/lf20_m6cuL6.json" 
+          url="https://lottie.host/af3a1c6a-605e-4c74-8848-0ca1a86ed1f6/u0t8W3kH6R.json" 
           className="w-full h-full"
         />
       </div>
       <div className="text-center mt-8 space-y-4">
-        <h1 className="text-4xl font-black text-sky-900 tracking-tight animate-pulse">
-          Palembang<span className="text-yellow-500">Kidz</span>
+        <h1 className="text-4xl font-black text-sky-900 tracking-tight">
+          Palembang<span className="text-orange-500">Kidz</span>
         </h1>
-        <p className="text-sky-600 font-bold text-lg">Preparing the magic... ✨</p>
+        <p className="text-sky-600 font-bold text-lg">Siap Jelajah Palembang? 🎒</p>
       </div>
       
       {/* Decorative clay elements */}
