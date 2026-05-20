@@ -239,7 +239,7 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'One piece of Songket can take months to weave because it is so difficult!',
       plm: 'Nenun Songket iko lamo nian, pacak berbulan-bulan baru jadi sebuting.'
     },
-    imageUrl: 'https://tenunansongket.com/wp-content/uploads/2023/04/WhatsApp-Image-2023-05-11-at-22.56.06-e1683820625222.jpg',
+    imageUrl: 'https://indonesiaexpat.id/wp-content/uploads/2023/11/Main-Image-Songket-Palembang-by-Digstraksi.jpg',
     videoUrl: 'https://github.com/user-attachments/assets/fb897e75-c168-4301-af3f-ec4f13e168bf',
     voiceoverScript: {
       id: 'Wah, lihatlah kilauan emas pada kain Songket yang indah ini!',
@@ -413,7 +413,7 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'Kemplang Tunu is cooked by grilling over hot coals, not deep-fried!',
       plm: 'Kemplang Tunu tu dipanggang di pucuk baro api, mangkonyo rasonyo beda.'
     },
-    imageUrl: 'https://cdns.klimg.com/merdeka.com/i/w/news/2020/11/20/1244821/content_images/670x335/20201120144436-1-ilustrasi-kemplang-bakar-001-tantri-setyorini-vmdkimg20143916.jpg',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/2c/Kerupuk_kemplang_Bandar_Lampung.JPG',
     videoUrl: 'https://github.com/user-attachments/assets/27e9c97e-07a5-4482-9848-b064ddb4f817',
     voiceoverScript: {
       id: 'Kriuk! Makan Kemplang paling enak pakai sambal terasi pedas.',
@@ -529,7 +529,7 @@ export const CULTURE_DATA: CultureItem[] = [
       en: 'Palembang Batik often uses bright colors like red and yellow!',
       plm: 'Batik kito ni biasonyo warno abang samo kuning, cerah nian.'
     },
-    imageUrl: 'https://perdagangan.palembang.go.id/uploads/k0cm106mmdahaxy_55c20fd7c8.jpeg',
+    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR98oBvxAuYTX_MprCSd-_2ArV8PNb9JvqpTQ&s',
     videoUrl: 'https://github.com/user-attachments/assets/8f153542-ddad-4c7f-af14-aa17cb5c795c',
     voiceoverScript: {
       id: 'Indah sekali ya motif bunga pada Batik Palembang ini!',
