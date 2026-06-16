@@ -134,8 +134,8 @@ const FindDifference: React.FC<{ lang: Language, onClose: () => void }> = ({ lan
           </div>
         </div>
 
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 h-full min-h-0">
-          <div onClick={(e) => handleTap(e, 'base')} className="relative aspect-square md:aspect-auto bg-white rounded-[3rem] overflow-hidden border-8 border-white shadow-2xl cursor-crosshair">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center items-center max-w-4xl mx-auto w-full">
+          <div onClick={(e) => handleTap(e, 'base')} className="relative aspect-square w-full bg-white rounded-[3rem] overflow-hidden border-8 border-white shadow-2xl cursor-crosshair">
             <img src={images?.base} className="w-full h-full object-cover select-none" alt="Original" />
             {differences.filter(d => d.found).map(d => (
               <div key={d.id} className="absolute w-12 h-12 border-4 border-green-500 bg-green-500/20 rounded-full flex items-center justify-center shadow-lg pointer-events-none z-40 transform -translate-x-1/2 -translate-y-1/2" style={{ left: `${d.x}%`, top: `${d.y}%` }}>
@@ -143,7 +143,7 @@ const FindDifference: React.FC<{ lang: Language, onClose: () => void }> = ({ lan
               </div>
             ))}
           </div>
-          <div onClick={(e) => handleTap(e, 'modified')} className="relative aspect-square md:aspect-auto bg-white rounded-[3rem] overflow-hidden border-8 border-white shadow-2xl cursor-crosshair">
+          <div onClick={(e) => handleTap(e, 'modified')} className="relative aspect-square w-full bg-white rounded-[3rem] overflow-hidden border-8 border-white shadow-2xl cursor-crosshair">
             <img src={images?.modified} className="w-full h-full object-cover select-none" alt="Modified" />
             {differences.filter(d => d.found).map(d => (
               <div key={d.id} className="absolute w-12 h-12 border-4 border-green-500 bg-green-500/20 rounded-full flex items-center justify-center shadow-lg pointer-events-none z-40 transform -translate-x-1/2 -translate-y-1/2" style={{ left: `${d.x}%`, top: `${d.y}%` }}>
