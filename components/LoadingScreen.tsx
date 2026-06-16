@@ -8,7 +8,11 @@ const LoadingScreen: React.FC = () => {
       <div className="w-64 h-64 md:w-96 md:h-96">
         {/* Kid-friendly adventure/explorer animation */}
         <LottiePlayer 
+<<<<<<< HEAD
+          url="https://lottie.host/626d9101-70e1-451e-9243-913495147f20/vL6T9H6w8b.json" 
+=======
           url="https://lottie.host/af3a1c6a-605e-4c74-8848-0ca1a86ed1f6/u0t8W3kH6R.json" 
+>>>>>>> d4da2c8d353b29bb54ce98aa7985efda437195e6
           className="w-full h-full"
         />
       </div>
